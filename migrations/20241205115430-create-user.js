@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("users", {
@@ -21,8 +23,8 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.STRING(50),
-        defaultValue: "user",
+        type: Sequelize.ENUM("User", "Admin"), // Updated to ENUM
+        defaultValue: "User", // Match case with the model
         allowNull: false,
       },
       active: {
@@ -38,6 +40,16 @@ module.exports = {
       },
       password_reset_expires: {
         type: Sequelize.DATE,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"), // Add timestamps
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"), // Add timestamps
       },
     });
   },

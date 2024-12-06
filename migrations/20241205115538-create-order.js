@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      UserId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -27,13 +27,15 @@ module.exports = {
         allowNull: false,
         defaultValue: "pending",
       },
-      created_at: {
+      createdAt: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
-      updated_at: {
+      updatedAt: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

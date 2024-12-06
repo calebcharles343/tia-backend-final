@@ -22,14 +22,7 @@ module.exports = {
           max: 5,
         },
       },
-      created_at: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-      },
-      updated_at: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-      },
+
       productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -45,6 +38,17 @@ module.exports = {
           model: "users",
           key: "id",
         },
+      },
+
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
 

@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true,
       },
-      OrderId: {
+      orderId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -18,7 +18,7 @@ module.exports = {
           key: "id",
         },
       },
-      ProductId: {
+      productId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -34,6 +34,16 @@ module.exports = {
       pricePerItem: {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },

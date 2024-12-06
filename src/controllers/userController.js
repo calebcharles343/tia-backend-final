@@ -1,5 +1,4 @@
 import {
-  createUserService,
   deleteUserService,
   getAllInactiveUsersService,
   getAllUsersService,
@@ -85,3 +84,29 @@ export const deleteUser = catchAsync(async (req, res, next) => {
   if (!deletedUser) return handleResponse(res, 404, "User not found");
   handleResponse(res, 200, "User deleted successfully", deletedUser);
 });
+
+/*
+3. Querying Multiple Orders
+You can fetch multiple orders for a user or their associated items with the defined associations. Here’s how:
+
+Fetch All Orders for a User:
+javascript
+Copy code
+const userOrders = await User.findOne({
+  where: { id: userId },
+  include: {
+    model: Order,
+    as: "userOrders",
+    include: { model: OrderItem, as: "items" },
+  },
+});
+This query retrieves a user’s orders, along with their associated items.
+Fetch a Specific Order and Its Items:
+javascript
+Copy code
+const order = await Order.findOne({
+  where: { id: orderId },
+  include: { model: OrderItem, as: "items" },
+});
+
+*/

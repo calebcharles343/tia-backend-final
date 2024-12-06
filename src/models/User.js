@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js"; // Your Sequelize instance
 import Order from "./Order.js";
-import Product from "./Product.js";
 import Review from "./Review.js";
 
 const User = sequelize.define(
@@ -26,14 +25,9 @@ const User = sequelize.define(
       allowNull: false,
     },
     role: {
-      type: DataTypes.STRING(50),
-      defaultValue: "user",
+      type: DataTypes.ENUM("User", "Admin"),
+      defaultValue: "User",
       allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-      field: "created_at", // Map to custom column name
     },
     active: {
       type: DataTypes.BOOLEAN,
@@ -54,8 +48,11 @@ const User = sequelize.define(
     },
   },
   {
-    tableName: "users", // Specify table name if different from model name
-    timestamps: false, // Disable default `createdAt` and `updatedAt` fields
+    tableName: "users",
+    timestamps: true, // Enable timestamps for auditing
+    indexes: [
+      { unique: true, fields: ["email"] }, // Index for faster lookups
+    ],
   }
 );
 
@@ -63,23 +60,27 @@ const User = sequelize.define(
 
 // User -> Order
 User.hasMany(Order, {
-  foreignKey: "UserId",
-  as: "userOrders", // Updated alias to avoid duplication
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "CASCADE",
+  as: "userOrders",
 });
 
 Order.belongsTo(User, {
-  foreignKey: "UserId",
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "CASCADE",
   as: "user",
 });
 
 // User -> Review
 User.hasMany(Review, {
-  foreignKey: "userId",
-  as: "userReviews", // Ensure unique alias
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "CASCADE",
+  as: "userReviews",
 });
 
 Review.belongsTo(User, {
-  foreignKey: "userId",
+  foreignKey: { name: "userId", allowNull: false },
+  onDelete: "CASCADE",
   as: "user",
 });
 

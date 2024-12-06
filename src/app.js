@@ -9,6 +9,7 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json" assert { type: "json" };
 import productRouter from "./routes/productRoutes.js";
+import orderRouter from "./routes/OrderRoute.js";
 
 dotenv.config();
 
@@ -35,8 +36,9 @@ app.use(
 );
 
 // Routes
-app.use("/api/v1/shopping-list/users", userRouter);
-app.use("/api/v1/shopping-list/products", productRouter);
+app.use("/api/v1/e-commerce/users", userRouter);
+app.use("/api/v1/e-commerce/products", productRouter);
+app.use("/api/v1/e-commerce/orders", orderRouter);
 
 // Error handling middleware
 app.use(errorHandler);

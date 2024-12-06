@@ -7,6 +7,7 @@ const handleJWTExpiredError = () =>
   new AppError("Your token has expired! Please log in again.", 401);
 
 const handleDuplicateKey = () => new AppError("Already exits.", 401);
+const handleSequelizeDatabaseError = () => new AppError("Does not exist.", 500);
 
 const errorHandler = (err, req, res, next) => {
   const env = process.env.NODE_ENV
@@ -15,9 +16,9 @@ const errorHandler = (err, req, res, next) => {
   const isDevelopment = env === "development";
   const isProduction = env === "production";
 
-  // If error is not an instance of AppError, create a new AppError with generic message
+  //If error is not an instance of AppError, create a new AppError with generic message
   if (!(err instanceof AppError)) {
-    err = new AppError(err.message, 500);
+    err = new AppError(err, 500);
   }
 
   // Set default properties if not already set
@@ -37,9 +38,26 @@ const errorHandler = (err, req, res, next) => {
   if (isProduction) {
     let error = { ...err, message: err.message };
 
-    if (error.message === "jwt malformed") error = handleJWTError();
-    if (error.message === "jwt expired") error = handleJWTExpiredError();
-    if (error.message.includes("duplicate key")) error = handleDuplicateKey();
+    if (
+      error.message === "jwt malformed" ||
+      error.message.includes("jwt malformed")
+    )
+      error = handleJWTError();
+    if (
+      error.message === "jwt expired" ||
+      error.message.includes("jwt expired")
+    )
+      error = handleJWTExpiredError();
+    if (
+      error.message === "Validation error" ||
+      error.message.includes("SequelizeUniqueConstraintError")
+    )
+      error = handleDuplicateKey();
+    if (
+      error.message === "does not exist" ||
+      error.message.includes("does not exist")
+    )
+      error = handleSequelizeDatabaseError();
 
     // Send operational error message; generic message for non-operational errors
     return res.status(error.statusCode).json({

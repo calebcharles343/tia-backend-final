@@ -65,21 +65,23 @@ export const changedPasswordAfterToken = (req, res, next) => {
 export const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirm_password, role } = req.body;
 
+  // Ensure passwords match
   if (password !== confirm_password) {
     return next(new AppError("Passwords do not match", 400));
   }
 
+  // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const userRole = role || "user";
-
+  // Create a new user
   const newUser = await User.create({
     name,
     email,
     password: hashedPassword,
-    role: userRole,
+    role: role || "user", // Default to "user" if no role is provided
   });
 
+  // Generate token and send response
   createSendToken(newUser, 201, res);
 });
 
@@ -157,28 +159,38 @@ export const restrictTo = (...roles) => {
 };
 
 // Forgot password
+
 export const forgotPassword = catchAsync(async (req, res, next) => {
+  // Check if user exists
   const user = await User.findOne({
     where: { email: req.body.email },
   });
 
   if (!user) {
-    return next(new AppError("There is no user with this email address.", 404));
+    return next(
+      new AppError(
+        `There is no user registered with the email: ${req.body.email}`,
+        404
+      )
+    );
   }
 
+  // Generate token and expiry date
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hashedToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
 
-  const resetExpires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  const resetExpires = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // Store as a Date object
 
+  // Update user with token and expiry
   await user.update({
-    password_reset_token: hashedToken,
-    password_reset_expires: resetExpires,
+    passwordResetToken: hashedToken,
+    passwordResetExpires: resetExpires,
   });
 
+  // Construct password reset URL
   const resetURL = `${req.protocol}://${req.get(
     "host"
   )}/api/v1/users/resetPassword/${resetToken}`;
@@ -186,27 +198,30 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   try {
+    // Send email
     await sendMail({
       userMail: user.email,
       message,
     });
 
+    // Response to client
     handleResponse(res, 200, "Token sent to email!");
   } catch (err) {
+    console.log("right here ==>");
+    // Reset token and expiry in case of email failure
     await user.update({
-      password_reset_token: null,
-      password_reset_expires: null,
+      passwordResetToken: null,
+      passwordResetExpires: null,
     });
 
     return next(
       new AppError(
-        "There was an error sending the email. Try again later!",
+        "There was an error sending the email. Please try again later.",
         500
       )
     );
   }
 });
-
 // Reset password
 export const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
@@ -214,14 +229,16 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     .update(req.params.token)
     .digest("hex");
 
-  const currentTime = new Date(); // Get the current timestamp
+  const currentTime = new Date().toISOString(); // Use current date for comparison
 
   const user = await User.findOne({
     where: {
-      password_reset_token: hashedToken,
-      password_reset_expires: { [Op.gt]: currentTime }, // Op.gt: greater than current time
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { [Op.gt]: currentTime }, // Op.gt: greater than current time
     },
   });
+
+
 
   if (!user) {
     return next(new AppError("Token is invalid or has expired", 400));
@@ -231,9 +248,9 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
   await user.update({
     password: hashedPassword,
-    password_reset_token: null,
-    password_reset_expires: null,
-    password_changed_at: new Date(),
+    passwordResetToken: null,
+    passwordResetExpires: null,
+    passwordChangedAt: new Date(),
   });
 
   createSendToken(user, 200, res);
@@ -251,7 +268,7 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   await user.update({
     password: hashedPassword,
-    password_changed_at: new Date(),
+    passwordChangedAt: new Date(),
   });
 
   createSendToken(user, 200, res);

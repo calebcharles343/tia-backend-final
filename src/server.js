@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import app from "./app.js"; // Import the app
-import sequelize from "./config/db.js"; // Import Sequelize instance
 
 // Load environment variables
 dotenv.config();

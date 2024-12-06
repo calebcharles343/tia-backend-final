@@ -10,24 +10,14 @@ import {
 
 const productRouter = express.Router();
 
-productRouter.post("/addShopItem", protect, restrictTo("Admin"), createProduct);
+productRouter.post("/", protect, restrictTo("Admin"), createProduct);
 
 productRouter.get("/", protect, getAllProducts);
 
 productRouter.get("/:id", protect, getProductById);
 
-productRouter.patch(
-  "/updateShopItem/:id",
-  protect,
-  restrictTo("Admin"),
-  updateProduct
-);
+productRouter.patch("/:id", protect, restrictTo("Admin"), updateProduct);
 
-productRouter.delete(
-  "/deleteShopItem/:id",
-  protect,
-  restrictTo("Admin"),
-  deleteProduct
-);
+productRouter.delete("/:id", protect, restrictTo("Admin"), deleteProduct);
 
 export default productRouter;

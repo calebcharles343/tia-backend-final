@@ -53,7 +53,9 @@ userRouter.get(
 /*//////////////////////*/
 /*BASIC CRUD ROUTE*/
 /*//////////////////////*/
-userRouter.route("/").get(protect, changedPasswordAfterToken, getAllUsers);
+userRouter
+  .route("/")
+  .get(protect, changedPasswordAfterToken, restrictTo("Admin"), getAllUsers);
 
 userRouter
   .route("/:id")

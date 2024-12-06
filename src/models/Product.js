@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js"; // Path to your Sequelize instance
+import sequelize from "../config/db.js";
 import Review from "./Review.js";
 
 const Product = sequelize.define(
@@ -10,36 +10,81 @@ const Product = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    product_name: {
+    name: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Product name cannot be empty.",
+        },
+      },
+    },
+    description: {
+      type: DataTypes.TEXT, // Allow longer descriptions
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Product description cannot be empty.",
+        },
+      },
+    },
+    category: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Product category cannot be empty.",
+        },
+      },
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      validate: {
+        min: 0, // Ensure price is non-negative
+      },
     },
-
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      validate: {
+        min: 0, // Ensure stock is non-negative
+      },
     },
-
-    ratingsQuantity: {
+    ratingCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      field: "ratings_quantity",
     },
-    ratingsAverage: {
+    ratingAverage: {
       type: DataTypes.FLOAT,
       defaultValue: 4.5,
+      field: "ratings_average",
     },
   },
   {
-    tableName: "products", // Specify table name explicitly
-    timestamps: false, // Disable createdAt and updatedAt fields
+    tableName: "products",
+    timestamps: true,
+    indexes: [
+      { fields: ["name"] }, // Updated index field
+      { fields: ["category"] }, // Add index for category for filtering
+    ],
   }
 );
 
-Product.hasMany(Review, { foreignKey: "productId", as: "reviews" });
-Review.belongsTo(Product, { foreignKey: "productId", as: "product" });
+// Associations
+
+// Product -> Review
+Product.hasMany(Review, {
+  foreignKey: { name: "productId", allowNull: false },
+  onDelete: "CASCADE", // Ensure reviews are deleted when product is deleted
+  as: "reviews",
+});
+
+Review.belongsTo(Product, {
+  foreignKey: { name: "productId", allowNull: false },
+  onDelete: "CASCADE",
+  as: "product",
+});
 
 export default Product;
