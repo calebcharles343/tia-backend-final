@@ -1,12 +1,10 @@
 import express from "express";
-import {
-  createReview,
-  getProductReviews,
-} from "../controllers/reviewController";
+import { protect } from "../controllers/authController";
+import { getProductReviews } from "../controllers/reviewController";
 
 const reviewRouter = express.Router();
 
-reviewRouter.post("/:id", protect, createReview);
+reviewRouter.post("/:id", protect, createReviee);
 
 reviewRouter.get("/:id", protect, getProductReviews);
 
