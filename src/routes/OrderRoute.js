@@ -1,5 +1,5 @@
 import express from "express";
-import { protect, restrictTo } from "../controllers/authController.js";
+import { protect } from "../controllers/authController.js";
 import {
   createOrder,
   getUserOrders,
@@ -9,7 +9,7 @@ import {
 
 const orderRouter = express.Router();
 
-orderRouter.post("/", protect, createOrder);
+orderRouter.post("/:id", protect, createOrder);
 
 orderRouter.get("/:id", protect, getUserOrders);
 
@@ -19,8 +19,5 @@ orderRouter.patch(
   orderStatus("pending", "completed", "cancelled"),
   updateOrderStatus
 );
-// orderRouter.get("/:id", protect, getProductById);
-
-// orderRouter.delete("/:id", protect, restrictTo("Admin"), deleteProduct);
 
 export default orderRouter;

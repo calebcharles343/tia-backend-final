@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json" assert { type: "json" };
 import productRouter from "./routes/productRoutes.js";
 import orderRouter from "./routes/OrderRoute.js";
+import reviewRouter from "./routes/reviewRoutes.js";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(
 app.use("/api/v1/e-commerce/users", userRouter);
 app.use("/api/v1/e-commerce/products", productRouter);
 app.use("/api/v1/e-commerce/orders", orderRouter);
+app.use("/api/v1/e-commerce/orders", reviewRouter);
 
 // Error handling middleware
 app.use(errorHandler);
