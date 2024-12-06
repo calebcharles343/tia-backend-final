@@ -9,7 +9,7 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json" assert { type: "json" };
 import productRouter from "./routes/productRoutes.js";
-import orderRouter from "./routes/OrderRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 import reviewRouter from "./routes/reviewRoutes.js";
 
 dotenv.config();
