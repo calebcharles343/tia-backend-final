@@ -1,11 +1,17 @@
-import express from "express";
-import { protect } from "../controllers/authController";
-import { getProductReviews } from "../controllers/reviewController";
+"use strict";
+
+const express = require("express");
+
+const protect = require("../middleware/protect.js");
+const {
+  createReview,
+  getProductReviews,
+} = require("../controllers/rewiewController.js");
 
 const reviewRouter = express.Router();
 
-reviewRouter.post("/:id", protect, createReviee);
+reviewRouter.post("/:id", protect, createReview);
 
 reviewRouter.get("/:id", protect, getProductReviews);
 
-export default reviewRouter;
+module.exports = reviewRouter;

@@ -1,9 +1,12 @@
-import Product from "../models/Product.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import { handleResponse } from "../utils/handleResponse.js";
+"use strict";
+
+const catchAsync = require("../middleware/catchAsync.js");
+const Product = require("../models/Product.js");
+
+const handleResponse = require("../utils/handleResponse.js");
 
 // Create a new product
-export const createProduct = catchAsync(async (req, res, next) => {
+const createProduct = catchAsync(async (req, res, next) => {
   const { name, description, category, price, stock } = req.body;
   const product = await Product.create({
     name,
@@ -17,14 +20,14 @@ export const createProduct = catchAsync(async (req, res, next) => {
 });
 
 // Get all products
-export const getAllProducts = catchAsync(async (req, res, next) => {
+const getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.findAll();
 
   handleResponse(res, 200, "Products fetched successfully", products);
 });
 
 // Get a single product by ID
-export const getProductById = catchAsync(async (req, res, next) => {
+const getProductById = catchAsync(async (req, res, next) => {
   const product = await Product.findByPk(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
@@ -34,7 +37,7 @@ export const getProductById = catchAsync(async (req, res, next) => {
 });
 
 // Update a product
-export const updateProduct = catchAsync(async (req, res, next) => {
+const updateProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findByPk(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
@@ -44,11 +47,19 @@ export const updateProduct = catchAsync(async (req, res, next) => {
 });
 
 // Delete a product
-export const deleteProduct = catchAsync(async (req, res, next) => {
+const deleteProduct = catchAsync(async (req, res, next) => {
   const product = await Product.findByPk(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
   await product.destroy();
-  handleResponse(res, 204, "Product deletedted successfully");
+  handleResponse(res, 204, "Product deleted successfully");
 });
+
+module.exports = {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+};

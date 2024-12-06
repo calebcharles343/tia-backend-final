@@ -1,12 +1,14 @@
-import Order from "../models/Order.js";
-import OrderItem from "../models/OrderItem.js";
-import Product from "../models/Product.js";
-import { AppError } from "../utils/appError.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import { handleResponse } from "../utils/handleResponse.js";
+"use strict";
+
+const catchAsync = require("../middleware/catchAsync.js");
+const Order = require("../models/Order.js");
+const OrderItem = require("../models/OrderItem.js");
+const Product = require("../models/Product.js");
+const AppError = require("../utils/appError.js");
+const handleResponse = require("../utils/handleResponse.js");
 
 // Create a new order
-export const createOrder = catchAsync(async (req, res, next) => {
+const createOrder = catchAsync(async (req, res, next) => {
   const { items } = req.body; // Array of { productId, quantity }
 
   // Validate that items array is not empty
@@ -66,7 +68,7 @@ export const createOrder = catchAsync(async (req, res, next) => {
 });
 
 // Get all orders of the authenticated user
-export const getUserOrders = catchAsync(async (req, res, next) => {
+const getUserOrders = catchAsync(async (req, res, next) => {
   const orders = await Order.findAll({
     where: { userId: req.params.id },
     include: [
@@ -86,7 +88,7 @@ export const getUserOrders = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, "orders fetched successfully", orders);
 });
 
-export const orderStatus = (...status) => {
+const orderStatus = (...status) => {
   return (req, res, next) => {
     if (!status.includes(req.body.status)) {
       return next(
@@ -102,7 +104,7 @@ export const orderStatus = (...status) => {
 };
 
 // Update order status (e.g., admin functionality)
-export const updateOrderStatus = catchAsync(async (req, res, next) => {
+const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { status } = req.body;
   const order = await Order.findByPk(req.params.id);
   if (!order) {
@@ -114,3 +116,10 @@ export const updateOrderStatus = catchAsync(async (req, res, next) => {
 
   handleResponse(res, 200, `order ${status}`, order);
 });
+
+module.exports = {
+  createOrder,
+  getUserOrders,
+  orderStatus,
+  updateOrderStatus,
+};

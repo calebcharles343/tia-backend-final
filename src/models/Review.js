@@ -1,5 +1,7 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/db.js";
+"use strict";
+
+const { DataTypes, Model } = require("sequelize");
+const sequelize = require("../config/db.js");
 
 class Review extends Model {
   // Static method to calculate average ratings
@@ -78,4 +80,4 @@ Review.init(
 // 1. Review -> Product
 // 2. Review -> User
 
-export default Review;
+module.exports = Review;

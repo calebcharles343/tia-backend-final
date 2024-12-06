@@ -1,21 +1,24 @@
-import Product from "../models/Product.js";
+"use strict";
 
-export const getAllProductsService = async () => {
+const Product = require("../models/Product.js");
+
+const getAllProductsService = async () => {
   const Products = await Product.findAll();
   return Products;
 };
 
-export const getProductByIdService = async (id) => {
+const getProductByIdService = async (id) => {
   const Product = await Product.findByPk(id);
   return Product;
 };
 
-export const createProductService = async (product_name, price, stock) => {
+const createProductService = async (product_name, price, stock) => {
   const newProduct = await Product.create({ product_name, price, stock });
   return newProduct;
 };
 
-export const updateProductService = async (body) => {
+const updateProductService = async (id, body) => {
+  // Added 'id' parameter
   const Product = await Product.findByPk(id);
   if (!Product) return null;
 
@@ -24,10 +27,18 @@ export const updateProductService = async (body) => {
   return Product;
 };
 
-export const deleteProductService = async (id) => {
+const deleteProductService = async (id) => {
   const Product = await Product.findByPk(id);
   if (!Product) return null;
 
   await Product.destroy();
   return Product;
+};
+
+module.exports = {
+  getAllProductsService,
+  getProductByIdService,
+  createProductService,
+  updateProductService,
+  deleteProductService,
 };

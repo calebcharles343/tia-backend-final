@@ -1,5 +1,7 @@
-import dotenv from "dotenv";
-import app from "./app.js"; // Import the app
+"use strict";
+
+const dotenv = require("dotenv");
+const app = require("./app.js"); // Import the app
 
 // Load environment variables
 dotenv.config();

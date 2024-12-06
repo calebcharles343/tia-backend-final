@@ -1,11 +1,14 @@
-import express from "express";
-import { protect } from "../controllers/authController.js";
-import {
+"use strict";
+
+const express = require("express");
+
+const {
   createOrder,
   getUserOrders,
   orderStatus,
   updateOrderStatus,
-} from "../controllers/orderController.js";
+} = require("../controllers/0rderController.js");
+const protect = require("../middleware/protect.js");
 
 const orderRouter = express.Router();
 
@@ -20,4 +23,4 @@ orderRouter.patch(
   updateOrderStatus
 );
 
-export default orderRouter;
+module.exports = orderRouter;

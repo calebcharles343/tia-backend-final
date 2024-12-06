@@ -1,7 +1,9 @@
-import User from "../models/User.js"; // Import the Sequelize model
+"use strict";
+
+const User = require("../models/User.js"); // Import the Sequelize model
 
 // Fetch all active users
-export const getAllUsersService = async () => {
+const getAllUsersService = async () => {
   const users = await User.findAll({
     where: { active: true },
   });
@@ -9,7 +11,7 @@ export const getAllUsersService = async () => {
 };
 
 // Fetch all inactive users
-export const getAllInactiveUsersService = async () => {
+const getAllInactiveUsersService = async () => {
   const users = await User.findAll({
     where: { active: false },
   });
@@ -17,7 +19,7 @@ export const getAllInactiveUsersService = async () => {
 };
 
 // Fetch a user by ID
-export const getUserByIdService = async (id) => {
+const getUserByIdService = async (id) => {
   const user = await User.findOne({
     where: { id },
   });
@@ -25,7 +27,7 @@ export const getUserByIdService = async (id) => {
 };
 
 // Create a new user
-export const createUserService = async (name, email) => {
+const createUserService = async (name, email) => {
   const newUser = await User.create({
     name,
     email,
@@ -34,7 +36,7 @@ export const createUserService = async (name, email) => {
 };
 
 // Update an existing user
-export const updateUserService = async (id, name, email) => {
+const updateUserService = async (id, name, email) => {
   const [rowsUpdated, [updatedUser]] = await User.update(
     { name, email },
     {
@@ -46,7 +48,7 @@ export const updateUserService = async (id, name, email) => {
 };
 
 // Soft delete a user (mark as inactive)
-export const deleteUserService = async (id) => {
+const deleteUserService = async (id) => {
   const [rowsUpdated, [updatedUser]] = await User.update(
     { active: false },
     {
@@ -55,4 +57,13 @@ export const deleteUserService = async (id) => {
     }
   );
   return updatedUser;
+};
+
+module.exports = {
+  getAllUsersService,
+  getAllInactiveUsersService,
+  getUserByIdService,
+  createUserService,
+  updateUserService,
+  deleteUserService,
 };

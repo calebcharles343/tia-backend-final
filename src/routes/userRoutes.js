@@ -1,30 +1,32 @@
-import express from "express";
-import {
+"use strict";
+
+const express = require("express");
+const {
   deleteUser,
   getAllInactiveUsers,
   getAllUsers,
   getUserById,
   updateMe,
-} from "../controllers/userController.js";
-import singupValidator from "../middleware/singupValidator.js";
-import {
+} = require("../controllers/userController.js");
+const singupValidator = require("../middleware/singupValidator.js");
+const {
   changedPasswordAfterToken,
   forgotPassword,
   login,
   logout,
-  protect,
   resetPassword,
   restrictTo,
   signup,
   updatePassword,
-} from "../controllers/authController.js";
+} = require("../controllers/authController.js");
+const protect = require("../middleware/protect.js");
 
 const userRouter = express.Router();
 
 /*//////////////////////*/
 /*AUTHENTICATION ROUTE*/
 /*//////////////////////*/
-//These are special end points that do not 100% fit the rest philosophy
+// These are special endpoints that do not 100% fit the REST philosophy
 
 /*//////////////////////*/
 userRouter.post("/signup", singupValidator, signup);
@@ -33,7 +35,7 @@ userRouter.post("/logout", logout);
 userRouter.post("/forgotPassword", forgotPassword);
 
 /*
-resetPassword is a patch requet because we a modifying the\ 
+resetPassword is a patch request because we are modifying the
 password property of the user document
 */
 userRouter.patch("/resetPassword/:token", resetPassword);
@@ -63,4 +65,4 @@ userRouter
   .patch(updateMe)
   .delete(deleteUser);
 
-export default userRouter;
+module.exports = userRouter;

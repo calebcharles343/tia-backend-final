@@ -25,6 +25,7 @@ module.exports = {
           model: "products",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       quantity: {
         type: Sequelize.INTEGER,

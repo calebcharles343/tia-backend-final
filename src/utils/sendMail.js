@@ -1,6 +1,8 @@
-import nodemailer from "nodemailer";
+"use strict";
 
-export const sendMail = async (options) => {
+const nodemailer = require("nodemailer");
+
+const sendMail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -35,3 +37,5 @@ export const sendMail = async (options) => {
     throw new Error("Failed to send email");
   }
 };
+
+module.exports = sendMail;

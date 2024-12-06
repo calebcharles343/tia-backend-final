@@ -1,6 +1,8 @@
-import { body, validationResult } from "express-validator";
+"use strict";
 
-export const validateProduct = [
+const { body, validationResult } = require("express-validator");
+
+const validateProduct = [
   body("product_name").notEmpty().withMessage("Product name is required."),
   body("price").isDecimal().withMessage("Price must be a decimal value."),
   body("stock").isInt().withMessage("Stock must be an integer."),
@@ -12,3 +14,5 @@ export const validateProduct = [
     next();
   },
 ];
+
+module.exports = validateProduct;

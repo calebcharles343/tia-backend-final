@@ -1,6 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
-import Review from "./Review.js";
+"use strict";
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db.js");
+const Review = require("./Review.js");
 
 const Product = sequelize.define(
   "Product",
@@ -87,4 +89,4 @@ Review.belongsTo(Product, {
   as: "product",
 });
 
-export default Product;
+module.exports = Product;

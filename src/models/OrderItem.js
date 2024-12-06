@@ -1,6 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
-import Product from "./Product.js";
+"use strict";
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db.js");
+const Product = require("./Product.js");
 
 const OrderItem = sequelize.define(
   "OrderItem",
@@ -27,6 +29,7 @@ const OrderItem = sequelize.define(
         model: "products", // Updated to match table name
         key: "id",
       },
+      onDelete: "CASCADE",
     },
     quantity: {
       type: DataTypes.INTEGER,
@@ -69,4 +72,4 @@ OrderItem.belongsTo(Product, {
   as: "product",
 });
 
-export default OrderItem;
+module.exports = OrderItem;

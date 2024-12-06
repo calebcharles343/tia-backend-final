@@ -1,6 +1,8 @@
-import { body, validationResult } from "express-validator";
+"use strict";
 
-export const validateReview = [
+const { body, validationResult } = require("express-validator");
+
+const validateReview = [
   body("rating")
     .isFloat({ min: 1, max: 5 })
     .withMessage("Rating must be between 1 and 5."),
@@ -13,3 +15,5 @@ export const validateReview = [
     next();
   },
 ];
+
+module.exports = validateReview;

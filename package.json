@@ -2,7 +2,6 @@
   "name": "shopping-list",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "npm run && nodemon src/server.js",
     "start:prod": "export NODE_ENV=production && node src/server.js",

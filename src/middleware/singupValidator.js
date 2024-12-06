@@ -1,4 +1,6 @@
-import Joi from "joi";
+"use strict";
+
+const Joi = require("joi");
 
 const userSchema = Joi.object({
   name: Joi.string()
@@ -39,4 +41,4 @@ const singupValidator = (req, res, next) => {
   next();
 };
 
-export default singupValidator;
+module.exports = singupValidator;

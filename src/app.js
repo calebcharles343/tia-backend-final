@@ -1,16 +1,18 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import errorHandler from "./middleware/errorHandler.js";
-import userRouter from "./routes/userRoutes.js";
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
+"use strict";
 
-import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "../swagger.json" assert { type: "json" };
-import productRouter from "./routes/productRoutes.js";
-import orderRouter from "./routes/orderRoute.js";
-import reviewRouter from "./routes/reviewRoutes.js";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const errorHandler = require("./middleware/errorHandler.js");
+const userRouter = require("./routes/userRoutes.js");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("../swagger.json");
+const productRouter = require("./routes/productRoutes.js");
+const orderRouter = require("./routes/orderRoutes.js");
+const reviewRouter = require("./routes/reviewRoutes.js");
 
 dotenv.config();
 
@@ -40,9 +42,9 @@ app.use(
 app.use("/api/v1/e-commerce/users", userRouter);
 app.use("/api/v1/e-commerce/products", productRouter);
 app.use("/api/v1/e-commerce/orders", orderRouter);
-app.use("/api/v1/e-commerce/orders", reviewRouter);
+app.use("/api/v1/e-commerce/reviews", reviewRouter);
 
 // Error handling middleware
 app.use(errorHandler);
 
-export default app;
+module.exports = app;

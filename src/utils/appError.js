@@ -6,7 +6,9 @@
 
 // Programming Errors : Bugs in code by developers
 /*/////////////////////////*/
-export class AppError extends Error {
+"use strict";
+
+class AppError extends Error {
   constructor(message, statusCode) {
     super(message); // Initialize parent class to access error behavior
 
@@ -19,3 +21,5 @@ export class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+
+module.exports = AppError;

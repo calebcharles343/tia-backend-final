@@ -1,6 +1,8 @@
-import { Sequelize } from "sequelize";
-import dotenv from "dotenv";
-// import setupAssociations from "../models/setupAssociations";
+"use strict";
+
+const { Sequelize } = require("sequelize");
+const dotenv = require("dotenv");
+// const setupAssociations = require("../models/setupAssociations");
 // setupAssociations();
 
 dotenv.config();
@@ -45,4 +47,4 @@ sequelize
     console.error("Unable to connect to the database:", error);
   });
 
-export default sequelize;
+module.exports = sequelize;

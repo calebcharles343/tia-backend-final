@@ -1,6 +1,8 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
-import OrderItem from "./OrderItem.js";
+"use strict";
+
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/db.js");
+const OrderItem = require("./OrderItem.js");
 
 const Order = sequelize.define(
   "Order",
@@ -56,4 +58,4 @@ OrderItem.belongsTo(Order, {
   as: "order",
 });
 
-export default Order;
+module.exports = Order;

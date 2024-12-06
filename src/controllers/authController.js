@@ -1,13 +1,15 @@
-import jwt from "jsonwebtoken";
-import { promisify } from "util";
-import crypto from "crypto";
-import bcrypt from "bcrypt";
-import { catchAsync } from "../utils/catchAsync.js";
-import { AppError } from "../utils/appError.js";
-import { sendMail } from "../utils/sendMail.js";
-import { handleResponse } from "../utils/handleResponse.js";
-import User from "../models/User.js"; // Import the Sequelize model
-import { Op } from "sequelize";
+"use strict";
+
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+
+const AppError = require("../utils/appError.js");
+const sendMail = require("../utils/sendMail.js");
+const handleResponse = require("../utils/handleResponse.js");
+const User = require("../models/User.js"); // Import the Sequelize model
+const { Op } = require("sequelize");
+const catchAsync = require("../middleware/catchAsync.js");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -39,7 +41,7 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 // Check if the password has been changed after the JWT token was issued
-export const changedPasswordAfterToken = (req, res, next) => {
+const changedPasswordAfterToken = (req, res, next) => {
   const { password_changed_at } = req.user;
   const JWTTimestamp = req.user.iat;
 
@@ -62,7 +64,7 @@ export const changedPasswordAfterToken = (req, res, next) => {
 };
 
 // Signup new user
-export const signup = catchAsync(async (req, res, next) => {
+const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirm_password, role } = req.body;
 
   // Ensure passwords match
@@ -86,7 +88,7 @@ export const signup = catchAsync(async (req, res, next) => {
 });
 
 // Login user
-export const login = catchAsync(async (req, res, next) => {
+const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -105,7 +107,7 @@ export const login = catchAsync(async (req, res, next) => {
 });
 
 // Logout user
-export const logout = (req, res) => {
+const logout = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(Date.now() + 10 * 1000),
@@ -114,39 +116,8 @@ export const logout = (req, res) => {
   handleResponse(res, 200, "Logged out successfully");
 };
 
-// Protect route (authentication middleware)
-export const protect = catchAsync(async (req, res, next) => {
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-  if (!token) {
-    return next(
-      new AppError("You are not logged in! Please log in to get access.", 401)
-    );
-  }
-
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-  const user = await User.findByPk(decoded.id);
-
-  if (!user) {
-    return next(
-      new AppError("The user belonging to this token no longer exists.", 401)
-    );
-  }
-
-  req.user = user;
-  req.user.iat = decoded.iat;
-
-  next();
-});
-
 // Restrict access to certain roles
-export const restrictTo = (...roles) => {
+const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
@@ -159,8 +130,7 @@ export const restrictTo = (...roles) => {
 };
 
 // Forgot password
-
-export const forgotPassword = catchAsync(async (req, res, next) => {
+const forgotPassword = catchAsync(async (req, res, next) => {
   // Check if user exists
   const user = await User.findOne({
     where: { email: req.body.email },
@@ -222,8 +192,9 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
+
 // Reset password
-export const resetPassword = catchAsync(async (req, res, next) => {
+const resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash("sha256")
     .update(req.params.token)
@@ -237,8 +208,6 @@ export const resetPassword = catchAsync(async (req, res, next) => {
       passwordResetExpires: { [Op.gt]: currentTime }, // Op.gt: greater than current time
     },
   });
-
-
 
   if (!user) {
     return next(new AppError("Token is invalid or has expired", 400));
@@ -257,7 +226,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 });
 
 // Update password
-export const updatePassword = catchAsync(async (req, res, next) => {
+const updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findByPk(req.user.id);
 
   if (!(await bcrypt.compare(req.body.passwordCurrent, user.password))) {
@@ -273,3 +242,14 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   createSendToken(user, 200, res);
 });
+
+module.exports = {
+  signup,
+  login,
+  logout,
+  restrictTo,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
+  changedPasswordAfterToken,
+};

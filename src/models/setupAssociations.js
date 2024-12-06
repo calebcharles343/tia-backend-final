@@ -1,8 +1,10 @@
-import Product from "./Product.js";
-import User from "./User.js";
-import Review from "./Review.js";
+"use strict";
 
-export default function setupAssociations() {
+const Product = require("./Product.js");
+const User = require("./User.js");
+const Review = require("./Review.js");
+
+function setupAssociations() {
   // Associations
   Review.belongsTo(Product, {
     foreignKey: {
@@ -20,3 +22,5 @@ export default function setupAssociations() {
     as: "user",
   });
 }
+
+module.exports = setupAssociations;

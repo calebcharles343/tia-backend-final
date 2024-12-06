@@ -1,6 +1,8 @@
-import Order from "../models/Order";
+"use strict";
 
-export const CreateOrderService = async (userId) => {
+const Order = require("../models/Order.js");
+
+const CreateOrderService = async (userId) => {
   const order = await Order.create(
     {
       UserId: 1,
@@ -27,3 +29,8 @@ const orderWithItems = await Order.findOne({
     },
   ],
 });
+
+module.exports = {
+  CreateOrderService,
+  orderWithItems,
+};

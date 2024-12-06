@@ -1,12 +1,15 @@
-import express from "express";
-import { protect, restrictTo } from "../controllers/authController.js";
-import {
+"use strict";
+
+const express = require("express");
+const { restrictTo } = require("../controllers/authController.js");
+const {
   createProduct,
   deleteProduct,
   getAllProducts,
   getProductById,
   updateProduct,
-} from "../controllers/productController.js";
+} = require("../controllers/productController.js");
+const protect = require("../middleware/protect.js");
 
 const productRouter = express.Router();
 
@@ -20,4 +23,4 @@ productRouter.patch("/:id", protect, restrictTo("Admin"), updateProduct);
 
 productRouter.delete("/:id", protect, restrictTo("Admin"), deleteProduct);
 
-export default productRouter;
+module.exports = productRouter;

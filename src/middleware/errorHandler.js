@@ -1,4 +1,6 @@
-import { AppError } from "../utils/appError.js";
+"use strict";
+
+const AppError = require("../utils/appError.js");
 
 const handleJWTError = () =>
   new AppError("Invalid or expired token! Please log in again.", 401);
@@ -6,7 +8,7 @@ const handleJWTError = () =>
 const handleJWTExpiredError = () =>
   new AppError("Your token has expired! Please log in again.", 401);
 
-const handleDuplicateKey = () => new AppError("Already exits.", 401);
+const handleDuplicateKey = () => new AppError("Already exists.", 401);
 const handleSequelizeDatabaseError = () => new AppError("Does not exist.", 500);
 
 const errorHandler = (err, req, res, next) => {
@@ -16,7 +18,7 @@ const errorHandler = (err, req, res, next) => {
   const isDevelopment = env === "development";
   const isProduction = env === "production";
 
-  //If error is not an instance of AppError, create a new AppError with generic message
+  // If error is not an instance of AppError, create a new AppError with generic message
   if (!(err instanceof AppError)) {
     err = new AppError(err, 500);
   }
@@ -69,4 +71,4 @@ const errorHandler = (err, req, res, next) => {
   next();
 };
 
-export default errorHandler;
+module.exports = errorHandler;

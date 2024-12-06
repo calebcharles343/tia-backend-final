@@ -1,12 +1,15 @@
-import {
+"use strict";
+
+const catchAsync = require("../middleware/catchAsync.js");
+const {
   deleteUserService,
   getAllInactiveUsersService,
   getAllUsersService,
   getUserByIdService,
   updateUserService,
-} from "../services/userServices.js";
-import { catchAsync } from "../utils/catchAsync.js";
-import { handleResponse } from "../utils/handleResponse.js";
+} = require("../services/userServices.js");
+
+const handleResponse = require("../utils/handleResponse.js");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -16,22 +19,22 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-export const getAllUsers = catchAsync(async (req, res, next) => {
+const getAllUsers = catchAsync(async (req, res, next) => {
   const users = await getAllUsersService();
   handleResponse(res, 200, "Users fetched successfully", users);
 });
 
-export const getAllInactiveUsers = catchAsync(async (req, res, next) => {
+const getAllInactiveUsers = catchAsync(async (req, res, next) => {
   const inactiveUsers = await getAllInactiveUsersService();
   handleResponse(
     res,
     200,
-    "Closed accounst fetched successfully",
+    "Closed accounts fetched successfully",
     inactiveUsers
   );
 });
 
-export const getUserById = catchAsync(async (req, res, next) => {
+const getUserById = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const user = await getUserByIdService(id);
 
@@ -39,7 +42,7 @@ export const getUserById = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, "User fetched successfully", user);
 });
 
-export const updateMe = catchAsync(async (req, res, next) => {
+const updateMe = catchAsync(async (req, res, next) => {
   console.log("Received update request");
 
   // 1) Create error if user POSTs password data
@@ -76,7 +79,7 @@ export const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-export const deleteUser = catchAsync(async (req, res, next) => {
+const deleteUser = catchAsync(async (req, res, next) => {
   const id = req.params.id;
 
   const deletedUser = await deleteUserService(id);
@@ -85,28 +88,10 @@ export const deleteUser = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, "User deleted successfully", deletedUser);
 });
 
-/*
-3. Querying Multiple Orders
-You can fetch multiple orders for a user or their associated items with the defined associations. Here’s how:
-
-Fetch All Orders for a User:
-javascript
-Copy code
-const userOrders = await User.findOne({
-  where: { id: userId },
-  include: {
-    model: Order,
-    as: "userOrders",
-    include: { model: OrderItem, as: "items" },
-  },
-});
-This query retrieves a user’s orders, along with their associated items.
-Fetch a Specific Order and Its Items:
-javascript
-Copy code
-const order = await Order.findOne({
-  where: { id: orderId },
-  include: { model: OrderItem, as: "items" },
-});
-
-*/
+module.exports = {
+  getAllUsers,
+  getAllInactiveUsers,
+  getUserById,
+  updateMe,
+  deleteUser,
+};
