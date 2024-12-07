@@ -2,33 +2,39 @@
 
 const catchAsync = require("../middleware/catchAsync.js");
 const Product = require("../models/Product.js");
+const {
+  getAllProductsService,
+  getProductByIdService,
+  createProductService,
+  updateProductService,
+} = require("../services/productService.js");
 
 const handleResponse = require("../utils/handleResponse.js");
 
 // Create a new product
 const createProduct = catchAsync(async (req, res, next) => {
   const { name, description, category, price, stock } = req.body;
-  const product = await Product.create({
+  const product = await createProductService(
     name,
     description,
     category,
     price,
-    stock,
-  });
+    stock
+  );
 
   handleResponse(res, 201, "Product created successfully", product);
 });
 
 // Get all products
 const getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.findAll();
+  const products = await getAllProductsService();
 
   handleResponse(res, 200, "Products fetched successfully", products);
 });
 
 // Get a single product by ID
 const getProductById = catchAsync(async (req, res, next) => {
-  const product = await Product.findByPk(req.params.id);
+  const product = await getProductByIdService(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
@@ -38,21 +44,20 @@ const getProductById = catchAsync(async (req, res, next) => {
 
 // Update a product
 const updateProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findByPk(req.params.id);
+  const product = await getProductByIdService(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
-  await product.update(req.body);
-  handleResponse(res, 200, "Product Updated successfully", product);
+  const updatedProduct = await updateProductService(req.body);
+  handleResponse(res, 200, "Product Updated successfully", updatedProduct);
 });
 
 // Delete a product
 const deleteProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findByPk(req.params.id);
+  const product = await getProductByIdService(req.params.id);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
-  await product.destroy();
   handleResponse(res, 204, "Product deleted successfully");
 });
 

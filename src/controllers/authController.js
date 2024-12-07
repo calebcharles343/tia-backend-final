@@ -1,108 +1,41 @@
 "use strict";
-
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
 const AppError = require("../utils/appError.js");
-const sendMail = require("../utils/sendMail.js");
 const handleResponse = require("../utils/handleResponse.js");
-const User = require("../models/User.js"); // Import the Sequelize model
-const { Op } = require("sequelize");
 const catchAsync = require("../middleware/catchAsync.js");
+const createSendToken = require("../utils/createSendToken.js");
+const {
+  signupService,
+  loginService,
+  forgotPasswordService,
+  findUserByResetTokenService,
+  updateUserPasswordService,
+  getUserByIdService,
+} = require("../services/AuthService.js");
+const comparePasswords = require("../utils/comparePasswords.JS");
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-};
-
-// Create and send the JWT token
-const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user.id);
-
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-
-  if (process.env.NODE_ENV.trim() === "production") cookieOptions.secure = true;
-
-  user.password = undefined;
-
-  res.cookie("jwt", token, cookieOptions);
-
-  handleResponse(res, statusCode, "Authentication successful", {
-    token,
-    user,
-  });
-};
-
-// Check if the password has been changed after the JWT token was issued
-const changedPasswordAfterToken = (req, res, next) => {
-  const { password_changed_at } = req.user;
-  const JWTTimestamp = req.user.iat;
-
-  if (password_changed_at) {
-    const changedTimestamp = parseInt(
-      new Date(password_changed_at).getTime() / 1000,
-      10
-    );
-    if (JWTTimestamp < changedTimestamp) {
-      return next(
-        new AppError(
-          "User recently changed password! Please log in again.",
-          401
-        )
-      );
-    }
-  }
-
-  next();
-};
-
-// Signup new user
 const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirm_password, role } = req.body;
-
-  // Ensure passwords match
+  // passwords check
   if (password !== confirm_password) {
     return next(new AppError("Passwords do not match", 400));
   }
-
-  // Hash the password
+  // hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Create a new user
-  const newUser = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    role: role || "user", // Default to "user" if no role is provided
-  });
-
-  // Generate token and send response
+  // create a new user
+  const newUser = await signupService(name, email, hashedPassword, role);
+  // generate token and send response
   createSendToken(newUser, 201, res);
 });
 
-// Login user
+// login user
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return next(new AppError("Please provide email and password!", 400));
   }
-
-  const user = await User.findOne({
-    where: { email },
-  });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return next(new AppError("Incorrect email or password", 401));
-  }
-
+  const user = await loginService(email, password, next);
   createSendToken(user, 200, res);
 });
 
@@ -112,134 +45,27 @@ const logout = (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 10 * 1000),
   });
-
   handleResponse(res, 200, "Logged out successfully");
-};
-
-// Restrict access to certain roles
-const restrictTo = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("You do not have permission to perform this action", 403)
-      );
-    }
-
-    next();
-  };
 };
 
 // Forgot password
 const forgotPassword = catchAsync(async (req, res, next) => {
-  // Check if user exists
-  const user = await User.findOne({
-    where: { email: req.body.email },
-  });
-
-  if (!user) {
-    return next(
-      new AppError(
-        `There is no user registered with the email: ${req.body.email}`,
-        404
-      )
-    );
-  }
-
-  // Generate token and expiry date
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-
-  const resetExpires = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // Store as a Date object
-
-  // Update user with token and expiry
-  await user.update({
-    passwordResetToken: hashedToken,
-    passwordResetExpires: resetExpires,
-  });
-
-  // Construct password reset URL
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
-  try {
-    // Send email
-    await sendMail({
-      userMail: user.email,
-      message,
-    });
-
-    // Response to client
-    handleResponse(res, 200, "Token sent to email!");
-  } catch (err) {
-    console.log("right here ==>");
-    // Reset token and expiry in case of email failure
-    await user.update({
-      passwordResetToken: null,
-      passwordResetExpires: null,
-    });
-
-    return next(
-      new AppError(
-        "There was an error sending the email. Please try again later.",
-        500
-      )
-    );
-  }
+  await forgotPasswordService(req.body.email, req);
+  res.status(200).json({ status: "success", message: "Token sent to email!" });
 });
 
 // Reset password
 const resetPassword = catchAsync(async (req, res, next) => {
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.params.token)
-    .digest("hex");
-
-  const currentTime = new Date().toISOString(); // Use current date for comparison
-
-  const user = await User.findOne({
-    where: {
-      passwordResetToken: hashedToken,
-      passwordResetExpires: { [Op.gt]: currentTime }, // Op.gt: greater than current time
-    },
-  });
-
-  if (!user) {
-    return next(new AppError("Token is invalid or has expired", 400));
-  }
-
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-  await user.update({
-    password: hashedPassword,
-    passwordResetToken: null,
-    passwordResetExpires: null,
-    passwordChangedAt: new Date(),
-  });
-
+  const user = await findUserByResetTokenService(req.params.token);
+  await updateUserPasswordService(user, req.body.password);
   createSendToken(user, 200, res);
 });
 
 // Update password
 const updatePassword = catchAsync(async (req, res, next) => {
-  const user = await User.findByPk(req.user.id);
-
-  if (!(await bcrypt.compare(req.body.passwordCurrent, user.password))) {
-    return next(new AppError("Your current password is wrong.", 401));
-  }
-
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-  await user.update({
-    password: hashedPassword,
-    passwordChangedAt: new Date(),
-  });
-
+  const user = await getUserByIdService(req.user.id);
+  await comparePasswords(req.body.passwordCurrent, user.password);
+  await updateUserPasswordService(user, req.body.password);
   createSendToken(user, 200, res);
 });
 
@@ -247,9 +73,7 @@ module.exports = {
   signup,
   login,
   logout,
-  restrictTo,
   forgotPassword,
   resetPassword,
   updatePassword,
-  changedPasswordAfterToken,
 };

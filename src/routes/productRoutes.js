@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const { restrictTo } = require("../controllers/authController.js");
 const {
   createProduct,
   deleteProduct,
@@ -10,6 +9,7 @@ const {
   updateProduct,
 } = require("../controllers/productController.js");
 const protect = require("../middleware/protect.js");
+const restrictTo = require("../middleware/restrictTo.js");
 
 const productRouter = express.Router();
 

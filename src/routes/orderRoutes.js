@@ -5,10 +5,10 @@ const express = require("express");
 const {
   createOrder,
   getUserOrders,
-  orderStatus,
   updateOrderStatus,
 } = require("../controllers/orderController.js");
 const protect = require("../middleware/protect.js");
+const orderStatus = require("../middleware/orderStatus.js");
 
 const orderRouter = express.Router();
 

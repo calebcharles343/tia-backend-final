@@ -12,17 +12,24 @@ const getProductByIdService = async (id) => {
   return Product;
 };
 
-const createProductService = async (product_name, price, stock) => {
-  const newProduct = await Product.create({ product_name, price, stock });
+const createProductService = async (
+  name,
+  description,
+  category,
+  price,
+  stock
+) => {
+  const newProduct = await Product.create({
+    name,
+    description,
+    category,
+    price,
+    stock,
+  });
   return newProduct;
 };
 
-const updateProductService = async (id, body) => {
-  // Added 'id' parameter
-  const Product = await Product.findByPk(id);
-  if (!Product) return null;
-
-  // Update the fields
+const updateProductService = async (body) => {
   await Product.update(body);
   return Product;
 };

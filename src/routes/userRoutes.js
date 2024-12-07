@@ -10,16 +10,16 @@ const {
 } = require("../controllers/userController.js");
 const singupValidator = require("../middleware/singupValidator.js");
 const {
-  changedPasswordAfterToken,
   forgotPassword,
   login,
   logout,
   resetPassword,
-  restrictTo,
   signup,
   updatePassword,
 } = require("../controllers/authController.js");
 const protect = require("../middleware/protect.js");
+const changedPasswordAfterToken = require("../middleware/changedPasswordAfterToken.js");
+const restrictTo = require("../middleware/restrictTo.js");
 
 const userRouter = express.Router();
 

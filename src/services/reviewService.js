@@ -13,11 +13,8 @@ const calcAverageRatings = async (productId) => {
   });
 
   const { nRating = 0, avgRating = 4.5 } = stats[0] || {};
-  console.log("❌=>", nRating, avgRating);
 
   const product = await Product.findByPk(productId);
-
-  console.log("❌❌❌====>", product);
 
   await product.update({
     ratingCount: nRating,
