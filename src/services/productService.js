@@ -8,8 +8,9 @@ const getAllProductsService = async () => {
 };
 
 const getProductByIdService = async (id) => {
-  const Product = await Product.findByPk(id);
-  return Product;
+  const product = await Product.findOne({ where: { id } });
+
+  return product;
 };
 
 const createProductService = async (
@@ -29,17 +30,15 @@ const createProductService = async (
   return newProduct;
 };
 
-const updateProductService = async (body) => {
-  await Product.update(body);
-  return Product;
+const updateProductService = async (product, body) => {
+  await product.update(body);
+  return product;
 };
 
 const deleteProductService = async (id) => {
-  const Product = await Product.findByPk(id);
+  const product = await Product.findOne({ where: { id } });
   if (!Product) return null;
-
-  await Product.destroy();
-  return Product;
+  await product.destroy();
 };
 
 module.exports = {

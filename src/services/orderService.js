@@ -4,7 +4,7 @@ const Order = require("../models/Order.js");
 const OrderItem = require("../models/OrderItem.js");
 const Product = require("../models/Product.js");
 
-const createOrderService = async (items) => {
+const createOrderService = async (userId, items) => {
   // Fetch product details from the database
   const productIds = items.map((item) => item.productId);
   const products = await Product.findAll({
@@ -38,7 +38,7 @@ const createOrderService = async (items) => {
 
   // Create the order
   const order = await Order.create({
-    userId: req.params.id,
+    userId: userId,
     totalPrice,
     status: "pending",
   });
@@ -56,9 +56,9 @@ const createOrderService = async (items) => {
   return order;
 };
 
-const getUserOrdersSevice = async () => {
+const getUserOrdersSevice = async (userId) => {
   const orders = await Order.findAll({
-    where: { userId: req.params.id },
+    where: { userId: userId },
     include: [
       {
         model: OrderItem,
@@ -80,6 +80,7 @@ const getOrderByIdSevice = async (id) => {
   const order = await Order.findByPk(id);
   return order;
 };
+
 const updateOrderStatusSevice = async (order, status) => {
   order.status = status;
   await order.save();

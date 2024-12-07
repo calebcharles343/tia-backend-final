@@ -1,9 +1,7 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
-const Order = require("../models/Order.js");
-const OrderItem = require("../models/OrderItem.js");
-const Product = require("../models/Product.js");
+
 const {
   createOrderService,
   getUserOrdersSevice,
@@ -16,20 +14,23 @@ const handleResponse = require("../utils/handleResponse.js");
 // Create a new order
 const createOrder = catchAsync(async (req, res, next) => {
   const { items } = req.body; // Array of { productId, quantity }
+  const userId = req.params.id;
 
   // Validate that items array is not empty
   if (!items || items.length === 0) {
     return handleResponse(res, 400, "No items provided for the order");
   }
 
-  const order = await createOrderService(items);
+  const order = await createOrderService(userId, items);
 
   handleResponse(res, 201, "Order created successfully", order);
 });
 
 // Get all orders of the authenticated user
 const getUserOrders = catchAsync(async (req, res, next) => {
-  const orders = await getUserOrdersSevice();
+  const userId = req.params.id;
+
+  const orders = await getUserOrdersSevice(userId);
 
   handleResponse(res, 200, "orders fetched successfully", orders);
 });

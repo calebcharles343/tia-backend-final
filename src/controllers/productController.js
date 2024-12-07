@@ -7,6 +7,7 @@ const {
   getProductByIdService,
   createProductService,
   updateProductService,
+  deleteProductService,
 } = require("../services/productService.js");
 
 const handleResponse = require("../utils/handleResponse.js");
@@ -48,7 +49,7 @@ const updateProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
-  const updatedProduct = await updateProductService(req.body);
+  const updatedProduct = await updateProductService(product, req.body);
   handleResponse(res, 200, "Product Updated successfully", updatedProduct);
 });
 
@@ -58,6 +59,8 @@ const deleteProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
+  await deleteProductService(req.params.id);
+
   handleResponse(res, 204, "Product deleted successfully");
 });
 
