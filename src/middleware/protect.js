@@ -1,10 +1,11 @@
 "use strict";
 
 const catchAsync = require("./catchAsync");
-const { AppError } = require("../utils/appError.js");
+
 const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
+const AppError = require("../utils/appError");
 
 // Protect route (authentication middleware)
 const protect = catchAsync(async (req, res, next) => {

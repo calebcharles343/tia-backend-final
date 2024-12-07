@@ -1,35 +1,16 @@
 "use strict";
 
-const { DataTypes, Model } = require("sequelize");
+const { DataTypes, models } = require("sequelize");
 const sequelize = require("../config/db.js");
 
-class Review extends Model {
-  // Static method to calculate average ratings
-  static async calcAverageRatings(productId) {
-    const stats = await Review.findAll({
-      attributes: [
-        [sequelize.fn("COUNT", sequelize.col("rating")), "nRating"],
-        [sequelize.fn("AVG", sequelize.col("rating")), "avgRating"],
-      ],
-      where: { productId },
-      raw: true,
-    });
-
-    const { nRating = 0, avgRating = 4.5 } = stats[0] || {};
-
-    const Product = (await import("./Product.js")).default; // Dynamic import
-    await Product.update(
-      {
-        ratingsQuantity: nRating,
-        ratingsAverage: avgRating,
-      },
-      { where: { id: productId } }
-    );
-  }
-}
-
-Review.init(
+const Review = sequelize.define(
+  "Review",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     review: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -57,13 +38,15 @@ Review.init(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
-    sequelize,
-    modelName: "Review",
     tableName: "reviews", // Explicit table name for clarity
     timestamps: true, // Enable createdAt/updatedAt
-    paranoid: true, // Enable soft deletes
+    paranoid: false, // Enable soft deletes if needed
     indexes: [
       {
         unique: true,
@@ -76,8 +59,36 @@ Review.init(
   }
 );
 
-// Associations (to be defined in their respective models):
-// 1. Review -> Product
-// 2. Review -> User
+// Associations
+
+// Review -> Product
+Review.associate = (models) => {
+  // A review belongs to a single product
+  Review.belongsTo(models.Product, {
+    foreignKey: "productId",
+    as: "product", // Alias for the association
+    onDelete: "CASCADE", // Delete reviews when the product is deleted
+  });
+
+  // A review belongs to a single user
+  Review.belongsTo(models.User, {
+    foreignKey: "userId",
+    as: "user", // Alias for the association
+    onDelete: "CASCADE", // Delete reviews when the user is deleted
+  });
+};
+
+// Review.belongsTo(Product, {
+//   foreignKey: "productId",
+//   as: "product", // Alias for the association
+//   onDelete: "CASCADE", // Delete reviews when the product is deleted
+// });
+
+// // Review -> User
+// Review.belongsTo(User, {
+//   foreignKey: "userId",
+//   as: "user", // Alias for the association
+//   onDelete: "CASCADE", // Delete reviews when the user is deleted
+// });
 
 module.exports = Review;

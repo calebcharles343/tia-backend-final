@@ -27,19 +27,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "products",
+          model: "products", // Ensure this matches the products table name
           key: "id",
         },
-
         onDelete: "CASCADE",
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "users",
+          model: "users", // Ensure this matches the users table name
           key: "id",
         },
+        onDelete: "CASCADE",
       },
 
       createdAt: {
@@ -57,7 +57,7 @@ module.exports = {
     await queryInterface.addConstraint("reviews", {
       fields: ["productId", "userId"],
       type: "unique",
-      name: "unique_product_user_review",
+      name: "unique_product_user_review", // Ensures one review per product per user
     });
   },
 

@@ -7,7 +7,7 @@ const {
   getUserOrders,
   orderStatus,
   updateOrderStatus,
-} = require("../controllers/0rderController.js");
+} = require("../controllers/orderController.js");
 const protect = require("../middleware/protect.js");
 
 const orderRouter = express.Router();

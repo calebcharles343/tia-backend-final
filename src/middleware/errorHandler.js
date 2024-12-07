@@ -1,6 +1,6 @@
 "use strict";
 
-const AppError = require("../utils/appError.js");
+const AppError = require("../utils/appError");
 
 const handleJWTError = () =>
   new AppError("Invalid or expired token! Please log in again.", 401);
