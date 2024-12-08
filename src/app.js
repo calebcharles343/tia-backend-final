@@ -14,6 +14,10 @@ const productRouter = require("./routes/productRoutes.js");
 const orderRouter = require("./routes/orderRoutes.js");
 const reviewRouter = require("./routes/reviewRoutes.js");
 
+const a3BucketRouter = require("./routes/a3BucketRoutes.js");
+const multer = require("multer");
+const { memoryStorage } = multer;
+
 dotenv.config();
 
 const app = express();
@@ -38,11 +42,16 @@ app.use(
   swaggerUi.setup(swaggerDocument)
 );
 
+// Storage setup for multer
+const storage = memoryStorage();
+const upload = multer({ storage });
+
 // Routes
 app.use("/api/v1/e-commerce/users", userRouter);
 app.use("/api/v1/e-commerce/products", productRouter);
 app.use("/api/v1/e-commerce/orders", orderRouter);
 app.use("/api/v1/e-commerce/reviews", reviewRouter);
+app.use("/api/v1/e-commerce/images", a3BucketRouter);
 
 // Error handling middleware
 app.use(errorHandler);
