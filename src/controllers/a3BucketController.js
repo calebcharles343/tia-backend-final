@@ -7,6 +7,7 @@ const {
   deleteFile,
 } = require("../models/A3Bucket");
 const handleResponse = require("../utils/handleResponse");
+const AppError = require("../utils/appError.js");
 
 /*/////////////////////////////// */
 // Route to handle image upload
@@ -41,6 +42,7 @@ const postImage = catchAsync(async (req, res, next) => {
 /*/////////////////////////////// */
 const getImages = catchAsync(async (req, res, next) => {
   const userId = req.headers["x-user-id"];
+  const { file } = req;
 
   // Validate request
   if (!userId) {
@@ -65,32 +67,45 @@ const getImages = catchAsync(async (req, res, next) => {
 // Update Image
 /*//////////////////////////////////////////// */
 const updateImage = catchAsync(async (req, res, next) => {
-  const { userId, key } = req.body;
+  const userId = req.headers["x-user-id"];
   const { file } = req; // New file data
 
   // Validate inputs
-  if (!userId || !key || !file) {
-    handleResponse(res, 400, "Bad request: Missing required parameters");
+  if (!userId || !file) {
+    return handleResponse(res, 400, "Bad request: Missing required parameters");
   }
 
-  // Step 1: Delete the old file
-  const deleteResponse = await deleteFile(userId, key);
-  if (deleteResponse.err) {
-    console.error("Error deleting file:", deleteResponse.err);
-    return res.status(500).json({ message: "Failed to delete the old image" });
+  // Step 1: Check for existing images
+  const { presignedUrls, err: fetchError } = await getUserPresignedUrls(userId);
+
+  if (fetchError) {
+    console.error("Error fetching existing images:", fetchError);
+    return next(new AppError("Error checking existing images", 500));
   }
 
-  // Step 2: Upload the new file
-  const { key: newKey, err } = await uploadToS3(file, userId);
-  if (err) {
-    console.error("Error uploading new file:", err);
+  // Step 2: If an existing image is found, delete it
+  if (presignedUrls.length > 0) {
+    const existingImageKey = presignedUrls[0].key.split("/")[1]; // Extract the key
+    const deleteResponse = await deleteFile(userId, existingImageKey);
+
+    if (deleteResponse.err) {
+      console.error("Error deleting existing image:", deleteResponse.err);
+      return res
+        .status(500)
+        .json({ message: "Failed to delete existing image" });
+    }
+  }
+
+  // Step 3: Upload the new image
+  const { key: newKey, err: uploadError } = await uploadToS3(file, userId);
+
+  if (uploadError) {
+    console.error("Error uploading new image:", uploadError);
     return next(new AppError("Failed to upload new image", 500));
   }
 
-  // Step 3: Respond with success
-
-  const updatedImage = { newKey: newKey };
-
+  // Step 4: Respond with success
+  const updatedImage = { newKey };
   handleResponse(res, 200, "Image updated successfully", updatedImage);
 });
 

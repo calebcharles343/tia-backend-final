@@ -46,6 +46,11 @@ const Product = sequelize.define(
         min: 0, // Ensure price is non-negative
       },
     },
+
+    avatar: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,

@@ -31,6 +31,10 @@ const User = sequelize.define(
       defaultValue: "User",
       allowNull: false,
     },
+    avatar: {
+      type: DataTypes.TEXT, // Allow longer descriptions
+      allowNull: true,
+    },
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

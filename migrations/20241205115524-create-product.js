@@ -26,6 +26,10 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
+      avatar: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       stock: {
         type: Sequelize.INTEGER,
         allowNull: false,

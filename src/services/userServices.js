@@ -36,9 +36,9 @@ const createUserService = async (name, email) => {
 };
 
 // Update an existing user
-const updateUserService = async (id, name, email) => {
+const updateUserService = async (id, name, email, avatar) => {
   const [rowsUpdated, [updatedUser]] = await User.update(
-    { name, email },
+    { name, email, avatar },
     {
       where: { id },
       returning: true, // Return the updated rows

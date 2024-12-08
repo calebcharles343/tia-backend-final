@@ -27,6 +27,10 @@ module.exports = {
         defaultValue: "User", // Match case with the model
         allowNull: false,
       },
+      avatar: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
       active: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
