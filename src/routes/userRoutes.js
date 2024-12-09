@@ -59,10 +59,6 @@ userRouter
   .route("/")
   .get(protect, changedPasswordAfterToken, restrictTo("Admin"), getAllUsers);
 
-userRouter
-  .route("/:id")
-  .get(protect, getUserById)
-  .patch(updateMe)
-  .delete(deleteUser);
+userRouter.route("/:id").get(protect, getUserById);
 
 module.exports = userRouter;

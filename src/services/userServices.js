@@ -18,21 +18,14 @@ const getAllInactiveUsersService = async () => {
   return users;
 };
 
-// Fetch a user by ID
 const getUserByIdService = async (id) => {
   const user = await User.findOne({
     where: { id },
   });
-  return user;
-};
 
-// Create a new user
-const createUserService = async (name, email) => {
-  const newUser = await User.create({
-    name,
-    email,
-  });
-  return newUser;
+  user.password = undefined;
+
+  return user;
 };
 
 // Update an existing user
@@ -63,7 +56,6 @@ module.exports = {
   getAllUsersService,
   getAllInactiveUsersService,
   getUserByIdService,
-  createUserService,
   updateUserService,
   deleteUserService,
 };

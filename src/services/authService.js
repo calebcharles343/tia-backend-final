@@ -10,30 +10,6 @@ const generateResetToken = require("../utils/generateResetToken.js");
 const updateUserWithResetToken = require("../utils/updateUserWithResetToken.js");
 const { Op } = require("sequelize");
 const comparePasswords = require("../utils/comparePasswords.JS");
-// Fetch all active users
-const getAllUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: true },
-  });
-  return users;
-};
-
-// Fetch all inactive users
-const getAllInactiveUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: false },
-  });
-  return users;
-};
-
-// Fetch a user by ID
-const getUserByIdService = async (userId) => {
-  const user = await User.findByPk(userId);
-  if (!user) {
-    throw new AppError("User not found", 404);
-  }
-  return user;
-};
 
 const signupService = async (name, email, hashedPassword, role = "User") => {
   const newUser = await User.create({
@@ -117,41 +93,12 @@ const updateUserPasswordService = async (user, newPassword) => {
   });
 };
 
-// Update an existing user
-const updateUserService = async (id, name, email) => {
-  const [rowsUpdated, [updatedUser]] = await User.update(
-    { name, email },
-    {
-      where: { id },
-      returning: true, // Return the updated rows
-    }
-  );
-  return updatedUser; // Return the first updated user
-};
-
-// Soft delete a user (mark as inactive)
-const deleteUserService = async (id) => {
-  const [rowsUpdated, [updatedUser]] = await User.update(
-    { active: false },
-    {
-      where: { id },
-      returning: true,
-    }
-  );
-  return updatedUser;
-};
-
 module.exports = {
-  getAllUsersService,
-  getAllInactiveUsersService,
-  getUserByIdService,
   signupService,
   loginService,
   forgotPasswordService,
   findUserByResetTokenService,
   updateUserPasswordService,
-  updateUserService,
-  deleteUserService,
 };
 
 // const user = await forgotPasswordService(req.body.email);
