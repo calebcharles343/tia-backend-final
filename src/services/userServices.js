@@ -29,14 +29,11 @@ const getUserByIdService = async (id) => {
 };
 
 // Update an existing user
-const updateUserService = async (id, name, email, avatar) => {
-  const [rowsUpdated, [updatedUser]] = await User.update(
-    { name, email, avatar },
-    {
-      where: { id },
-      returning: true, // Return the updated rows
-    }
-  );
+const updateUserService = async (id, newUserData) => {
+  const [rowsUpdated, [updatedUser]] = await User.update(newUserData, {
+    where: { id },
+    returning: true, // Return the updated rows
+  });
   return updatedUser; // Return the first updated user
 };
 

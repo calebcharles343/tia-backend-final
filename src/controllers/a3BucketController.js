@@ -8,6 +8,8 @@ const {
 } = require("../models/A3Bucket");
 const handleResponse = require("../utils/handleResponse");
 const AppError = require("../utils/appError.js");
+const filterObj = require("../utils/filterObj");
+const { updateUserService } = require("../services/userServices");
 
 /*/////////////////////////////// */
 // Route to handle image upload
@@ -41,16 +43,19 @@ const postImage = catchAsync(async (req, res, next) => {
 // Get images
 /*/////////////////////////////// */
 const getImages = catchAsync(async (req, res, next) => {
-  const userId = req.headers["x-user-id"];
-  const { file } = req;
+  let Id;
+  if (req.headers["x-user-id"]) Id = req.headers["x-user-id"];
+  if (req.headers["x-product-id"]) Id = req.headers["x-product-id"];
+
+  // const { file } = req;
 
   // Validate request
-  if (!userId) {
+  if (!Id) {
     handleResponse(res, 400, "Bad request: Missing user ID");
   }
 
-  // Call getUserPresignedUrls with the userId
-  const { presignedUrls, err } = await getUserPresignedUrls(userId);
+  // Call getUserPresignedUrls with the Id
+  const { presignedUrls, err } = await getUserPresignedUrls(Id);
 
   if (err) {
     return next(new AppError("Error fetching presigned URLs", 500));
@@ -67,16 +72,17 @@ const getImages = catchAsync(async (req, res, next) => {
 // Update Image
 /*//////////////////////////////////////////// */
 const updateImage = catchAsync(async (req, res, next) => {
-  const userId = req.headers["x-user-id"];
+  let Id = req.headers["x-user-id"] || req.headers["x-product-id"];
+
   const { file } = req; // New file data
 
   // Validate inputs
-  if (!userId || !file) {
+  if (!Id || !file) {
     return handleResponse(res, 400, "Bad request: Missing required parameters");
   }
 
   // Step 1: Check for existing images
-  const { presignedUrls, err: fetchError } = await getUserPresignedUrls(userId);
+  const { presignedUrls, err: fetchError } = await getUserPresignedUrls(Id);
 
   if (fetchError) {
     console.error("Error fetching existing images:", fetchError);
@@ -86,7 +92,7 @@ const updateImage = catchAsync(async (req, res, next) => {
   // Step 2: If an existing image is found, delete it
   if (presignedUrls.length > 0) {
     const existingImageKey = presignedUrls[0].key.split("/")[1]; // Extract the key
-    const deleteResponse = await deleteFile(userId, existingImageKey);
+    const deleteResponse = await deleteFile(Id, existingImageKey);
 
     if (deleteResponse.err) {
       console.error("Error deleting existing image:", deleteResponse.err);
@@ -97,7 +103,7 @@ const updateImage = catchAsync(async (req, res, next) => {
   }
 
   // Step 3: Upload the new image
-  const { key: newKey, err: uploadError } = await uploadToS3(file, userId);
+  const { key: newKey, err: uploadError } = await uploadToS3(file, Id);
 
   if (uploadError) {
     console.error("Error uploading new image:", uploadError);
@@ -106,6 +112,22 @@ const updateImage = catchAsync(async (req, res, next) => {
 
   // Step 4: Respond with success
   const updatedImage = { newKey };
+  const { presignedUrls: presignedUrlsNew, err } = await getUserPresignedUrls(
+    Id
+  );
+
+  if (err) {
+    const errorType = Id.includes("userAvatar")
+      ? "Updating user"
+      : "Updating Product";
+    return next(new AppError(`Failed to get url for ${errorType}`, 500));
+  }
+
+  const iDparts = Id.split("-");
+  const userId = iDparts[iDparts.length - 1];
+  const filteredBody = filterObj({ avatar: presignedUrlsNew[0].url }, "avatar");
+  await updateUserService(userId, { avatar: filteredBody.avatar });
+
   handleResponse(res, 200, "Image updated successfully", updatedImage);
 });
 

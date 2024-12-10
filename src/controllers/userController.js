@@ -8,16 +8,9 @@ const {
   getUserByIdService,
   updateUserService,
 } = require("../services/userServices.js");
+const filterObj = require("../utils/filterObj.js");
 
 const handleResponse = require("../utils/handleResponse.js");
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
 
 const getAllUsers = catchAsync(async (req, res, next) => {
   const users = await getAllUsersService();
@@ -58,15 +51,12 @@ const updateMe = catchAsync(async (req, res, next) => {
   // 2) Filtered out unwanted fields names that are not allowed to be updated
   const filteredBody = filterObj(req.body, "name", "email", "avatar");
 
-  console.log("Filtered body:", filteredBody);
-
   // 3) Update user record
-  const updatedUser = await updateUserService(
-    req.user.id,
-    filteredBody.name,
-    filteredBody.email,
-    filteredBody.avatar
-  );
+  const updatedUser = await updateUserService(req.user.id, {
+    name: filteredBody.name,
+    email: filteredBody.email,
+    avatar: filteredBody.avatar,
+  });
 
   if (!updatedUser) {
     return next(new AppError("No user found with that ID", 404));
