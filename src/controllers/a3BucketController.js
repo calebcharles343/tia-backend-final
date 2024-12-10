@@ -10,6 +10,10 @@ const handleResponse = require("../utils/handleResponse");
 const AppError = require("../utils/appError.js");
 const filterObj = require("../utils/filterObj");
 const { updateUserService } = require("../services/userServices");
+const {
+  getProductByIdService,
+  updateProductService,
+} = require("../services/productService");
 
 /*/////////////////////////////// */
 // Route to handle image upload
@@ -124,9 +128,15 @@ const updateImage = catchAsync(async (req, res, next) => {
   }
 
   const iDparts = Id.split("-");
-  const userId = iDparts[iDparts.length - 1];
+  const ImageId = iDparts[iDparts.length - 1];
   const filteredBody = filterObj({ avatar: presignedUrlsNew[0].url }, "avatar");
-  await updateUserService(userId, { avatar: filteredBody.avatar });
+  if (Id.includes("userAvatar")) {
+    await updateUserService(ImageId, { avatar: filteredBody.avatar });
+  } else {
+    const product = await getProductByIdService(ImageId);
+
+    await updateProductService(product, { avatar: filteredBody.avatar });
+  }
 
   handleResponse(res, 200, "Image updated successfully", updatedImage);
 });
