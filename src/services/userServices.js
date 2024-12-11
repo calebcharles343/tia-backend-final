@@ -20,24 +20,31 @@ const getAllInactiveUsersService = async () => {
 };
 
 const getUserByIdService = async (id) => {
-  const user = await User.findOne({
-    where: { id },
-  });
-  const avatarId = `userAvatar-${id}`;
+  try {
+    const user = await User.findOne({
+      where: { id },
+    });
 
-  const { presignedUrls, err } = await getUserPresignedUrls(avatarId);
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    }
 
-  if (err) {
-    user.avatar = undefined;
-  } else {
-    presignedUrls[0].url
-      ? (user.avatar = presignedUrls[0].url)
-      : (user.avatar = undefined);
+    const avatarId = `userAvatar-${id}`;
+    const { presignedUrls, err } = await getUserPresignedUrls(avatarId);
+
+    if (err) {
+      user.avatar = undefined;
+    } else {
+      user.avatar = presignedUrls[0]?.url || undefined;
+    }
+
+    user.password = undefined;
+
+    return user;
+  } catch (error) {
+    console.error(`Error fetching user by ID ${id}:`, error);
+    throw error;
   }
-
-  user.password = undefined;
-
-  return user;
 };
 
 // Update an existing user

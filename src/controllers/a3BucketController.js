@@ -78,6 +78,8 @@ const getImages = catchAsync(async (req, res, next) => {
 const updateImage = catchAsync(async (req, res, next) => {
   let Id = req.headers["x-user-id"] || req.headers["x-product-id"];
 
+  console.log(Id, "❌ID❌");
+
   const { file } = req; // New file data
 
   // Validate inputs
