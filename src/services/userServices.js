@@ -1,5 +1,6 @@
 "use strict";
 
+const { getUserPresignedUrls } = require("../models/A3Bucket.js");
 const User = require("../models/User.js"); // Import the Sequelize model
 
 // Fetch all active users
@@ -22,6 +23,17 @@ const getUserByIdService = async (id) => {
   const user = await User.findOne({
     where: { id },
   });
+  const avatarId = `userAvatar-${id}`;
+
+  const { presignedUrls, err } = await getUserPresignedUrls(avatarId);
+
+  if (err) {
+    user.avatar = undefined;
+  } else {
+    presignedUrls[0].url
+      ? (user.avatar = presignedUrls[0].url)
+      : (user.avatar = undefined);
+  }
 
   user.password = undefined;
 
