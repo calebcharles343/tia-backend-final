@@ -20,6 +20,7 @@ const OrderItem = sequelize.define(
         model: "orders", // Updated to match table name
         key: "id",
       },
+      onDelete: "CASCADE",
     },
     productId: {
       // Updated to camelCase for consistency

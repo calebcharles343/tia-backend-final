@@ -84,7 +84,6 @@ const findUserByResetTokenService = async (token) => {
 };
 
 const updateUserPasswordService = async (user, newPassword) => {
-  console.log(user, newPassword, "💪❌❌❌");
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await user.update({
     password: hashedPassword,

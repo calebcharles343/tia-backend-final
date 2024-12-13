@@ -15,7 +15,9 @@ const createReview = catchAsync(async (req, res, next) => {
   const currentUser = await userByToken(req, res);
   if (!currentUser) return handleResponse(res, 404, "User not found");
 
-  const { productId, rating, review } = req.body;
+  const { rating, review } = req.body;
+  const productId = req.params.productId;
+
   if ((!productId, !rating, !review))
     return handleResponse(res, 404, "invalid inputs");
 

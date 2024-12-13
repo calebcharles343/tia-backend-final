@@ -60,6 +60,7 @@ const updateProductService = async (product, body) => {
 
 const deleteProductService = async (id) => {
   const product = await Product.findOne({ where: { id } });
+
   if (!product) {
     console.error(`Product with ID ${id} not found`);
     return null;

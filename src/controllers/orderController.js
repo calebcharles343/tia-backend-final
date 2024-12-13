@@ -8,6 +8,7 @@ const {
   getUserOrdersSevice,
   getOrderByIdSevice,
   updateOrderStatusSevice,
+  deleteOrderSevice,
 } = require("../services/orderService.js");
 
 const handleResponse = require("../utils/handleResponse.js");
@@ -52,8 +53,20 @@ const updateOrderStatus = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, `order ${status}`, orderStatusUpdated);
 });
 
+const deleteOrder = catchAsync(async (req, res, next) => {
+  const order = await getOrderByIdSevice(req.params.orderId);
+
+  if (!order) {
+    return handleResponse(res, 404, "Order not found");
+  }
+
+  await deleteOrderSevice(req.params.orderId);
+  handleResponse(res, 204);
+});
+
 module.exports = {
   createOrder,
   getUserOrders,
   updateOrderStatus,
+  deleteOrder,
 };

@@ -87,9 +87,20 @@ const updateOrderStatusSevice = async (order, status) => {
   return order;
 };
 
+const deleteOrderSevice = async (id) => {
+  const order = await Order.findOne({ where: { id } });
+  if (!order) {
+    console.error(`Order with ID ${id} not found`);
+    return null;
+  }
+  await Order.destroy({ where: { id } });
+  return order;
+};
+
 module.exports = {
   createOrderService,
   getUserOrdersSevice,
   getOrderByIdSevice,
   updateOrderStatusSevice,
+  deleteOrderSevice,
 };

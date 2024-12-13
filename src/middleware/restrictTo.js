@@ -1,3 +1,5 @@
+const AppError = require("../utils/appError");
+
 // Restrict access to certain roles
 const restrictTo = (...roles) => {
   return (req, res, next) => {

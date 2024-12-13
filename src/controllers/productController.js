@@ -59,6 +59,7 @@ const deleteProduct = catchAsync(async (req, res, next) => {
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
+
   await deleteProductService(req.params.productId);
 
   handleResponse(res, 204, "Product deleted successfully");

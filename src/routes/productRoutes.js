@@ -19,7 +19,7 @@ productRouter.get("/", protect, getAllProducts);
 
 productRouter.get("/:productId", protect, getProductById);
 
-productRouter.patch("/:productId", protect, restrictTo("Admin"), updateProduct);
+productRouter.patch("/:productId", protect, restrictTo("admin"), updateProduct);
 
 productRouter.delete(
   "/:productId",
