@@ -12,12 +12,12 @@ const orderStatus = require("../middleware/orderStatus.js");
 
 const orderRouter = express.Router();
 
-orderRouter.post("/:id", protect, createOrder);
+orderRouter.post("/", protect, createOrder);
 
-orderRouter.get("/:id", protect, getUserOrders);
+orderRouter.get("/", protect, getUserOrders);
 
 orderRouter.patch(
-  "/:id",
+  "/:orderId",
   protect,
   orderStatus("pending", "completed", "cancelled"),
   updateOrderStatus

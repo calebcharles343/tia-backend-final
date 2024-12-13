@@ -1,6 +1,7 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
+const userByToken = require("../middleware/userByToken.js");
 const Product = require("../models/Product.js");
 const Review = require("../models/Review.js");
 const User = require("../models/User.js");
@@ -11,7 +12,12 @@ const handleResponse = require("../utils/handleResponse.js");
 
 // Create a new review
 const createReview = catchAsync(async (req, res, next) => {
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+
   const { productId, rating, review } = req.body;
+  if ((!productId, !rating, !review))
+    return handleResponse(res, 404, "invalid inputs");
 
   // Check if the product exists
   const product = await Product.findOne({
@@ -22,16 +28,13 @@ const createReview = catchAsync(async (req, res, next) => {
     return handleResponse(res, 404, "Product not available.");
   }
 
-  // Check if the user exists
-  const user = await User.findByPk(req.params.UserId);
-
-  if (!user) {
+  if (!currentUser) {
     return handleResponse(res, 404, "User not found.");
   }
 
   // Ensure the user hasn't already reviewed this product
   const existingReview = await Review.findOne({
-    where: { productId, userId: req.params.UserId },
+    where: { productId, userId: currentUser.id },
   });
 
   if (existingReview) {
@@ -40,7 +43,7 @@ const createReview = catchAsync(async (req, res, next) => {
 
   // Create the new review
   const newReview = await Review.create({
-    userId: req.params.UserId,
+    userId: currentUser.id,
     productId,
     rating,
     review,

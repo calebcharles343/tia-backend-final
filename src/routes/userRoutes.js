@@ -42,8 +42,8 @@ userRouter.patch("/resetPassword/:token", resetPassword);
 
 userRouter.patch("/updatePassword", protect, updatePassword);
 
-userRouter.patch("/updateMe/:id", protect, updateMe);
-userRouter.delete("/deleteMe/:id", protect, deleteUser);
+userRouter.patch("/updateMe", protect, updateMe);
+userRouter.delete("/deleteMe", protect, deleteUser);
 
 userRouter.get(
   "/closedAccounts",

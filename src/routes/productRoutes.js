@@ -17,10 +17,15 @@ productRouter.post("/", protect, restrictTo("Admin"), createProduct);
 
 productRouter.get("/", protect, getAllProducts);
 
-productRouter.get("/:id", protect, getProductById);
+productRouter.get("/:productId", protect, getProductById);
 
-productRouter.patch("/:id", protect, restrictTo("Admin"), updateProduct);
+productRouter.patch("/:productId", protect, restrictTo("Admin"), updateProduct);
 
-productRouter.delete("/:id", protect, restrictTo("Admin"), deleteProduct);
+productRouter.delete(
+  "/:productId",
+  protect,
+  restrictTo("Admin"),
+  deleteProduct
+);
 
 module.exports = productRouter;

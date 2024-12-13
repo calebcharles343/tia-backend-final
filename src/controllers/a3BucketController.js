@@ -15,70 +15,11 @@ const {
   updateProductService,
 } = require("../services/productService");
 
-/*/////////////////////////////// */
-// Route to handle image upload
-/*/////////////////////////////// */
-const postImage = catchAsync(async (req, res, next) => {
-  const { file } = req;
-  const userId = req.headers["x-user-id"];
-
-  // Validate request
-  if (!file || !userId) {
-    handleResponse(res, 400, "Bad request");
-  }
-
-  // Await the result of uploadToS3
-  const { key, err } = await uploadToS3(file, userId);
-
-  if (err) {
-    return next(new AppError("Error uploading to S3", 500));
-  }
-
-  // Return success response
-  const data = {
-    fileName: file.originalname,
-    key: key,
-  };
-
-  handleResponse(res, 200, "Upload successful", data);
-});
-
-/*/////////////////////////////// */
-// Get images
-/*/////////////////////////////// */
-const getImages = catchAsync(async (req, res, next) => {
-  let Id;
-  if (req.headers["x-user-id"]) Id = req.headers["x-user-id"];
-  if (req.headers["x-product-id"]) Id = req.headers["x-product-id"];
-
-  // const { file } = req;
-
-  // Validate request
-  if (!Id) {
-    handleResponse(res, 400, "Bad request: Missing user ID");
-  }
-
-  // Call getUserPresignedUrls with the Id
-  const { presignedUrls, err } = await getUserPresignedUrls(Id);
-
-  if (err) {
-    return next(new AppError("Error fetching presigned URLs", 500));
-  }
-
-  const urls = {
-    urls: presignedUrls,
-  };
-
-  handleResponse(res, 200, "Urls fetched successfully", urls);
-});
-
 /*//////////////////////////////////////////// */
 // Update Image
 /*//////////////////////////////////////////// */
 const updateImage = catchAsync(async (req, res, next) => {
   let Id = req.headers["x-user-id"] || req.headers["x-product-id"];
-
-  console.log(Id, "❌ID❌");
 
   const { file } = req; // New file data
 
@@ -143,29 +84,6 @@ const updateImage = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, "Image updated successfully", updatedImage);
 });
 
-/*//////////////////////////////////////////// */
-// Delete Image
-/*//////////////////////////////////////////// */
-const deleteImage = catchAsync(async (req, res, next) => {
-  const { userId, key } = req.params;
-
-  // Validate inputs
-  if (!userId || !key) {
-    handleResponse(res, 400, "Missing key");
-  }
-
-  const { message, err } = await deleteFile(userId, key);
-
-  if (err) {
-    return next(new AppError("Failed to delete image", 500));
-  }
-
-  handleResponse(res, 200, { message: message });
-});
-
 module.exports = {
-  postImage,
-  getImages,
   updateImage,
-  deleteImage,
 };

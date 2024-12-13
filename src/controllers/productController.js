@@ -35,7 +35,7 @@ const getAllProducts = catchAsync(async (req, res, next) => {
 
 // Get a single product by ID
 const getProductById = catchAsync(async (req, res, next) => {
-  const product = await getProductByIdService(req.params.id);
+  const product = await getProductByIdService(req.params.productId);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
@@ -45,7 +45,7 @@ const getProductById = catchAsync(async (req, res, next) => {
 
 // Update a product
 const updateProduct = catchAsync(async (req, res, next) => {
-  const product = await getProductByIdService(req.params.id);
+  const product = await getProductByIdService(req.params.productId);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
@@ -55,11 +55,11 @@ const updateProduct = catchAsync(async (req, res, next) => {
 
 // Delete a product
 const deleteProduct = catchAsync(async (req, res, next) => {
-  const product = await getProductByIdService(req.params.id);
+  const product = await getProductByIdService(req.params.productId);
   if (!product) {
     handleResponse(res, 404, "Product not found");
   }
-  await deleteProductService(req.params.id);
+  await deleteProductService(req.params.productId);
 
   handleResponse(res, 204, "Product deleted successfully");
 });

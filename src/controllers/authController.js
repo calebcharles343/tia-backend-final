@@ -14,6 +14,7 @@ const {
 } = require("../services/AuthService.js");
 const comparePasswords = require("../utils/comparePasswords.JS");
 const { getUserByIdService } = require("../services/userServices.js");
+const userByToken = require("../middleware/userByToken.js");
 
 const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirm_password, role } = req.body;
@@ -63,10 +64,11 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
 // Update password
 const updatePassword = catchAsync(async (req, res, next) => {
-  const user = await getUserByIdService(req.user.id);
-  await comparePasswords(req.body.passwordCurrent, user.password);
-  await updateUserPasswordService(user, req.body.password);
-  createSendToken(user, 200, res);
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+  await comparePasswords(req.body.passwordCurrent, currentUser.password);
+  await updateUserPasswordService(currentUser, req.body.password);
+  createSendToken(currentUser, 200, res);
 });
 
 module.exports = {

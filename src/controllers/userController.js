@@ -1,11 +1,11 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
+const userByToken = require("../middleware/userByToken.js");
 const {
   deleteUserService,
   getAllInactiveUsersService,
   getAllUsersService,
-  getUserByIdService,
   updateUserService,
 } = require("../services/userServices.js");
 const filterObj = require("../utils/filterObj.js");
@@ -28,21 +28,22 @@ const getAllInactiveUsers = catchAsync(async (req, res, next) => {
 });
 
 const getUserById = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
-  const user = await getUserByIdService(id);
+  const currentUser = await userByToken(req, res);
 
-  if (!user) return handleResponse(res, 404, "User not found");
-  handleResponse(res, 200, "User fetched successfully", user);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+  handleResponse(res, 200, "User fetched successfully", currentUser);
 });
 
 const updateMe = catchAsync(async (req, res, next) => {
-  console.log("Received update request");
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+  const { password, passwordConfirm } = req.body;
 
   // 1) Create error if user POSTs password data
-  if (req.body.password || req.body.passwordConfirm) {
+  if (password || passwordConfirm) {
     return next(
       new AppError(
-        "This route is not for password updates. Please use /updateMyPassword.",
+        "This route is not for password updates. Please use /updatePassword.",
         400
       )
     );
@@ -52,7 +53,7 @@ const updateMe = catchAsync(async (req, res, next) => {
   const filteredBody = filterObj(req.body, "name", "email", "avatar");
 
   // 3) Update user record
-  const updatedUser = await updateUserService(req.user.id, {
+  const updatedUser = await updateUserService(currentUser.id, {
     name: filteredBody.name,
     email: filteredBody.email,
     avatar: filteredBody.avatar,
@@ -71,9 +72,10 @@ const updateMe = catchAsync(async (req, res, next) => {
 });
 
 const deleteUser = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
 
-  const deletedUser = await deleteUserService(id);
+  const deletedUser = await deleteUserService(currentUser.id);
 
   if (!deletedUser) return handleResponse(res, 404, "User not found");
   handleResponse(res, 200, "User deleted successfully", deletedUser);

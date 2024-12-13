@@ -8,13 +8,16 @@ const {
   getOrderByIdSevice,
   updateOrderStatusSevice,
 } = require("../services/orderService.js");
-const AppError = require("../utils/appError.js");
+
 const handleResponse = require("../utils/handleResponse.js");
 
 // Create a new order
 const createOrder = catchAsync(async (req, res, next) => {
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+
   const { items } = req.body; // Array of { productId, quantity }
-  const userId = req.params.id;
+  const userId = currentUser.id;
 
   // Validate that items array is not empty
   if (!items || items.length === 0) {
@@ -28,7 +31,9 @@ const createOrder = catchAsync(async (req, res, next) => {
 
 // Get all orders of the authenticated user
 const getUserOrders = catchAsync(async (req, res, next) => {
-  const userId = req.params.id;
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+  const userId = currentUser.id;
 
   const orders = await getUserOrdersSevice(userId);
 
@@ -38,7 +43,7 @@ const getUserOrders = catchAsync(async (req, res, next) => {
 // Update order status (e.g., admin functionality)
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { status } = req.body;
-  const order = await getOrderByIdSevice(req.params.id);
+  const order = await getOrderByIdSevice(req.params.orderId);
   if (!order) {
     handleResponse(res, 404, "Order not found");
   }
