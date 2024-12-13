@@ -5,9 +5,9 @@
     "description": "Comprehensive API documentation for e-commerce application",
     "version": "1.0.0"
   },
-  "host": "127.0.0.1:4001",
-  "basePath": "/api/v1/e-commerce/",
-  "schemes": ["https"],
+  "host": "http://127.0.0.1:5002/",
+  "basePath": "/api/v1/cohort3-fullstack/",
+  "schemes": ["http", "https"],
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
   "securityDefinitions": {
