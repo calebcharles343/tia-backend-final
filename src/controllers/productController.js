@@ -1,7 +1,7 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
-const Product = require("../models/Product.js");
+
 const {
   getAllProductsService,
   getProductByIdService,

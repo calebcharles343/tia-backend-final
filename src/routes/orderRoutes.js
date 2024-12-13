@@ -12,7 +12,7 @@ const orderStatus = require("../middleware/orderStatus.js");
 
 const orderRouter = express.Router();
 
-orderRouter.post("/", protect, createOrder);
+orderRouter.post("/order", protect, createOrder);
 
 orderRouter.get("/", protect, getUserOrders);
 

@@ -38,7 +38,7 @@ const getUserByIdService = async (id) => {
       user.avatar = presignedUrls[0]?.url || undefined;
     }
 
-    user.password = undefined;
+    // user.password = undefined;
 
     return user;
   } catch (error) {

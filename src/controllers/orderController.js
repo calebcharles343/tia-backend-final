@@ -1,6 +1,7 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
+const userByToken = require("../middleware/userByToken.js");
 
 const {
   createOrderService,

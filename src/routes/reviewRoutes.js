@@ -10,7 +10,7 @@ const {
 
 const reviewRouter = express.Router();
 
-reviewRouter.post("/", protect, createReview);
+reviewRouter.post("/review", protect, createReview);
 
 reviewRouter.get("/:productId", protect, getProductReviews);
 

@@ -70,7 +70,12 @@ const getProductReviews = catchAsync(async (req, res, next) => {
     include: [{ model: User, as: "user" }],
   });
 
-  handleResponse(res, 201, "Reviews fetched successfully.", reviews);
+  const sanitizedReviews = reviews.map((review) => {
+    const { id, name, email, avatar } = review.user;
+    return { ...review.toJSON(), user: { id, name, email, avatar } };
+  });
+
+  handleResponse(res, 201, "Reviews fetched successfully.", sanitizedReviews);
 });
 
 module.exports = {

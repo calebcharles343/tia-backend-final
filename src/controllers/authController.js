@@ -12,7 +12,7 @@ const {
   findUserByResetTokenService,
   updateUserPasswordService,
 } = require("../services/AuthService.js");
-const comparePasswords = require("../utils/comparePasswords.JS");
+const comparePasswords = require("../utils/comparePasswords.js");
 const { getUserByIdService } = require("../services/userServices.js");
 const userByToken = require("../middleware/userByToken.js");
 
@@ -52,7 +52,7 @@ const logout = (req, res) => {
 // Forgot password
 const forgotPassword = catchAsync(async (req, res, next) => {
   await forgotPasswordService(req.body.email, req);
-  res.status(200).json({ status: "success", message: "Token sent to email!" });
+  handleResponse(res, 200, "Token sent to email!");
 });
 
 // Reset password
@@ -64,10 +64,21 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
 // Update password
 const updatePassword = catchAsync(async (req, res, next) => {
+  const { passwordCurrent, password, passwordConfirm } = req.body;
+
+  if (password !== passwordConfirm) {
+    return next(new AppError("passwords do not match", 400));
+  }
+
   const currentUser = await userByToken(req, res);
+
+  if (password !== passwordConfirm) {
+    return next(new AppError("passwords do not match", 400));
+  }
+
   if (!currentUser) return handleResponse(res, 404, "User not found");
-  await comparePasswords(req.body.passwordCurrent, currentUser.password);
-  await updateUserPasswordService(currentUser, req.body.password);
+  await comparePasswords(passwordCurrent, currentUser.password);
+  await updateUserPasswordService(currentUser, password);
   createSendToken(currentUser, 200, res);
 });
 

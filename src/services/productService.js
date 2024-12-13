@@ -12,7 +12,6 @@ const getProductByIdService = async (id) => {
 
   const avatarId = `productAvatar-${id}`;
 
-  console.log(avatarId, "❌❌❌❌");
   const { presignedUrls, err } = await getUserPresignedUrls(avatarId);
 
   if (err) {

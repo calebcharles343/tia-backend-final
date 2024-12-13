@@ -59,6 +59,6 @@ userRouter
   .route("/")
   .get(protect, changedPasswordAfterToken, restrictTo("Admin"), getAllUsers);
 
-userRouter.route("/:id").get(protect, getUserById);
+userRouter.route("/user").get(protect, getUserById);
 
 module.exports = userRouter;

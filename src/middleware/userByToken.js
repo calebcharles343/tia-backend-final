@@ -29,7 +29,6 @@ const userByToken = async (req, res) => {
 
   const currentUser = await getUserByIdService(decoded.id);
 
-  console.log(currentUser, "xxxxx");
   if (!currentUser) {
     return handleResponse(res, 401, "User no longer exists");
   }

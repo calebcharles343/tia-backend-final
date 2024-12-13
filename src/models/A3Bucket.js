@@ -76,7 +76,6 @@ const getUserPresignedUrls = async (userId) => {
     const photoKeys = await getPhotoKeysByUser(userId);
 
     if (!photoKeys || photoKeys.length === 0) {
-      console.log("No photos found for:", userId);
       return { presignedUrls: [] }; // Return empty array if no photos
     }
 

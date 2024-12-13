@@ -9,7 +9,7 @@ const sendMail = require("../utils/sendMail.js");
 const generateResetToken = require("../utils/generateResetToken.js");
 const updateUserWithResetToken = require("../utils/updateUserWithResetToken.js");
 const { Op } = require("sequelize");
-const comparePasswords = require("../utils/comparePasswords.JS");
+const comparePasswords = require("../utils/comparePasswords.js");
 
 const signupService = async (name, email, hashedPassword, role = "User") => {
   const newUser = await User.create({
@@ -84,6 +84,7 @@ const findUserByResetTokenService = async (token) => {
 };
 
 const updateUserPasswordService = async (user, newPassword) => {
+  console.log(user, newPassword, "💪❌❌❌");
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await user.update({
     password: hashedPassword,
