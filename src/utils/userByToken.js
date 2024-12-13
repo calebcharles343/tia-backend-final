@@ -2,7 +2,7 @@ const { promisify } = require("util");
 
 const jwt = require("jsonwebtoken");
 const { getUserByIdService } = require("../services/userServices");
-const handleResponse = require("../utils/handleResponse");
+const handleResponse = require("./handleResponse");
 
 const userByToken = async (req, res) => {
   let token;

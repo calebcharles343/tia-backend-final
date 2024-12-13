@@ -14,7 +14,7 @@ const {
 } = require("../services/AuthService.js");
 const comparePasswords = require("../utils/comparePasswords.js");
 const { getUserByIdService } = require("../services/userServices.js");
-const userByToken = require("../middleware/userByToken.js");
+const userByToken = require("../utils/userByToken.js");
 
 const signup = catchAsync(async (req, res, next) => {
   const { name, email, password, confirm_password, role } = req.body;

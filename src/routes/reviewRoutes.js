@@ -9,7 +9,7 @@ const {
   getProductReview,
   updateProductReview,
   deleteProductReview,
-} = require("../controllers/reviewController.js");
+} = require("../controllers/rewiewController.js");
 
 const reviewRouter = express.Router();
 

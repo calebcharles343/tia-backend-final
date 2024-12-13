@@ -1,7 +1,7 @@
 "use strict";
 
 const catchAsync = require("../middleware/catchAsync.js");
-const userByToken = require("../middleware/userByToken.js");
+const userByToken = require("../utils/userByToken.js");
 const {
   deleteUserService,
   getAllInactiveUsersService,
