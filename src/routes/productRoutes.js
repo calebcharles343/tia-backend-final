@@ -22,7 +22,7 @@ productRouter.get("/:productId", protect, getProductById);
 productRouter.patch(
   "/update/:productId",
   protect,
-  restrictTo("admin"),
+  restrictTo("Admin"),
   updateProduct
 );
 

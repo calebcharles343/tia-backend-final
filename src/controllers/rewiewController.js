@@ -85,6 +85,17 @@ const getProductReview = catchAsync(async (req, res, next) => {
 const updateProductReview = catchAsync(async (req, res, next) => {
   const { rating, review } = req.body;
   const { productId, reviewId } = req.params;
+  const product = await getProductByIdService(productId);
+
+  if (!product) {
+    return handleResponse(res, 404, "Product not found.");
+  }
+
+  const exitstingReview = await getReviewByIdService(productId, reviewId);
+
+  if (!exitstingReview) {
+    return handleResponse(res, 404, "Review not found.");
+  }
 
   const updatedReview = await updateProductService(reviewId, rating, review);
 

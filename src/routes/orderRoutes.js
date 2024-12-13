@@ -14,7 +14,7 @@ const restrictTo = require("../middleware/restrictTo.js");
 
 const orderRouter = express.Router();
 
-orderRouter.post("/order", protect, createOrder);
+orderRouter.post("/create", protect, createOrder);
 
 orderRouter.get("/", protect, getUserOrders);
 

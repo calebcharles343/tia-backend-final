@@ -3,6 +3,7 @@
 const Order = require("../models/Order.js");
 const OrderItem = require("../models/OrderItem.js");
 const Product = require("../models/Product.js");
+const AppError = require("../utils/appError.js");
 
 const createOrderService = async (userId, items) => {
   // Fetch product details from the database
@@ -13,7 +14,7 @@ const createOrderService = async (userId, items) => {
 
   // Check if all requested products exist
   if (products.length !== items.length) {
-    throw new Error("Some products are not found");
+    throw new AppError("Some products are not found");
   }
 
   // Calculate total price and create order items
@@ -22,7 +23,7 @@ const createOrderService = async (userId, items) => {
     const product = products.find((p) => p.id === item.productId);
 
     if (!product) {
-      throw new Error(`Product with ID ${item.productId} not found`);
+      throw new AppError(`Product with ID ${item.productId} not found`);
     }
 
     const pricePerItem = product.price; // Get price from the database
@@ -90,8 +91,7 @@ const updateOrderStatusSevice = async (order, status) => {
 const deleteOrderSevice = async (id) => {
   const order = await Order.findOne({ where: { id } });
   if (!order) {
-    console.error(`Order with ID ${id} not found`);
-    return null;
+    throw new AppError(`Order with ID ${id} not found`);
   }
   await Order.destroy({ where: { id } });
   return order;
