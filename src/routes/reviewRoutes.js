@@ -13,9 +13,9 @@ const {
 
 const reviewRouter = express.Router();
 
-reviewRouter.post("/review/:productId", protect, createReview);
+reviewRouter.post("/review/create/:productId", protect, createReview);
 reviewRouter.patch(
-  "/review/:productId/:reviewId",
+  "/review/upate/:productId/:reviewId",
   protect,
   updateProductReview
 );

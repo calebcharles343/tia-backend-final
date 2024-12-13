@@ -280,17 +280,18 @@
         }
       }
     },
+
     "/product/create": {
       "post": {
         "tags": ["Product"],
-        "description": "Add product to store. Login is required and Restricted to admin user.",
+        "description": "Add product to the store. Login is required and restricted to admin users.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
             "in": "body",
-            "description": "Product credentials includes name, description, category, price and stock.",
+            "description": "Product credentials include name, description, category, price, and stock.",
             "required": true,
             "schema": {
               "type": "object",
@@ -298,8 +299,8 @@
                 "name": { "type": "string" },
                 "description": { "type": "string" },
                 "category": { "type": "string" },
-                "price": { "type": "num" },
-                "stock": { "type": "num" }
+                "price": { "type": "number" },
+                "stock": { "type": "number" }
               }
             }
           }
@@ -307,9 +308,9 @@
         "responses": {
           "200": { "description": "Product added successfully." },
           "400": {
-            "description": "You do not have permission to perform this action"
+            "description": "You do not have permission to perform this action."
           },
-          "404": { "description": "Login Required." },
+          "404": { "description": "Login required." },
           "500": { "description": "Internal server error." }
         }
       }
@@ -317,11 +318,10 @@
     "/products": {
       "get": {
         "tags": ["Product"],
-        "description": "Retrieve a list of all Product. Login is required.",
-        "consumes": ["application/json"],
+        "description": "Retrieve a list of all products. Login is required.",
         "produces": ["application/json"],
         "responses": {
-          "200": { "description": "Product retrieved successfully." },
+          "200": { "description": "Products retrieved successfully." },
           "401": { "description": "Unauthorized access." },
           "500": { "description": "Internal server error." }
         }
@@ -331,43 +331,42 @@
       "get": {
         "tags": ["Product"],
         "description": "Retrieve a product by ID. Login is required.",
-        "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "id",
+            "name": "productId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the Product to Retrieve."
+            "description": "ID of the product to retrieve."
           }
         ],
         "responses": {
           "200": { "description": "Product retrieved successfully." },
           "401": { "description": "Unauthorized access." },
+          "404": { "description": "Product not found." },
           "500": { "description": "Internal server error." }
         }
       }
     },
-
     "/product/update/{productId}": {
       "patch": {
         "tags": ["Product"],
-        "description": "Update a product by ID. Login is required and Restricted to admin user",
+        "description": "Update a product by ID. Login is required and restricted to admin users.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "id",
+            "name": "productId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the Product to update."
+            "description": "ID of the product to update."
           },
           {
             "name": "body",
             "in": "body",
-            "description": "New Product details.",
+            "description": "New product details.",
             "required": true,
             "schema": {
               "type": "object",
@@ -375,8 +374,8 @@
                 "name": { "type": "string" },
                 "description": { "type": "string" },
                 "category": { "type": "string" },
-                "price": { "type": "num" },
-                "stock": { "type": "num" }
+                "price": { "type": "number" },
+                "stock": { "type": "number" }
               }
             }
           }
@@ -384,7 +383,7 @@
         "responses": {
           "200": { "description": "Product updated successfully." },
           "404": {
-            "description": "No Product with the proveided ID available in shop."
+            "description": "No product with the provided ID available in the shop."
           },
           "500": { "description": "Internal server error." }
         }
@@ -393,22 +392,294 @@
     "/product/delete/{productId}": {
       "delete": {
         "tags": ["Product"],
-        "description": "Delete a product. Login is required and Restricted to admin user.",
+        "description": "Delete a product. Login is required and restricted to admin users.",
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "id",
+            "name": "productId",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the Product to delete."
+            "description": "ID of the product to delete."
           }
         ],
         "responses": {
           "200": { "description": "Product deleted successfully." },
-          "400": { "description": "Invalid Product ID." },
+          "400": { "description": "Invalid product ID." },
           "401": { "description": "Unauthorized access." },
           "404": { "description": "Product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+
+    "/order/create": {
+      "post": {
+        "tags": ["Order"],
+        "description": "Create a new order. Login is required.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Order details.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "productId": { "type": "string" },
+                      "quantity": { "type": "number" }
+                    }
+                  }
+                },
+                "address": { "type": "string" },
+                "paymentMethod": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order created successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/order": {
+      "get": {
+        "tags": ["Order"],
+        "description": "Retrieve orders of the logged-in user. Login is required.",
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "Orders retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/order/{orderId}": {
+      "patch": {
+        "tags": ["Order"],
+        "description": "Update the status of an order by ID. Login is required.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the order to update."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Status update for the order.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "completed", "cancelled"]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order status updated successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Order not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/order/delete/{orderId}": {
+      "delete": {
+        "tags": ["Order"],
+        "description": "Delete an order by ID. Login is required and restricted to admin users.",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the order to delete."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order deleted successfully." },
+          "401": { "description": "Unauthorized access." },
+          "403": { "description": "Access restricted to admin users." },
+          "404": { "description": "Order not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+
+    "/review/create/{productId}": {
+      "post": {
+        "tags": ["Review"],
+        "description": "Create a review for a product. Login is required.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to review."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Review details.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+                "comment": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Review created successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/review/upate/{productId}/{reviewId}": {
+      "patch": {
+        "tags": ["Review"],
+        "description": "Update a review for a product. Login is required.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to update the review for."
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the review to update."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updated review details.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+                "comment": { "type": "string" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Review updated successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Review or product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/review/delete/{productId}/{reviewId}": {
+      "delete": {
+        "tags": ["Review"],
+        "description": "Delete a review for a product. Login is required.",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to delete the review for."
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the review to delete."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Review deleted successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Review or product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/reviews/{productId}": {
+      "get": {
+        "tags": ["Review"],
+        "description": "Retrieve all reviews for a product. Login is required.",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to retrieve reviews for."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Reviews retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/review/{productId}/{reviewId}": {
+      "get": {
+        "tags": ["Review"],
+        "description": "Retrieve a specific review for a product. Login is required.",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product the review belongs to."
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the review to retrieve."
+          }
+        ],
+        "responses": {
+          "200": { "description": "Review retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Review or product not found." },
           "500": { "description": "Internal server error." }
         }
       }
