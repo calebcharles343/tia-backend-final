@@ -29,18 +29,19 @@ app.use(helmet());
 app.use(express.json({ limit: "10kb" }));
 app.use(cors());
 
+// Swagger Documentation
+app.use(
+  "/e-commerce/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
+
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour!",
 });
 app.use("/api", limiter);
-
-app.use(
-  "/shopping-list/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument)
-);
 
 // Storage setup for multer
 const storage = memoryStorage();

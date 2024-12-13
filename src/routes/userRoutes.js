@@ -26,39 +26,31 @@ const userRouter = express.Router();
 /*//////////////////////*/
 /*AUTHENTICATION ROUTE*/
 /*//////////////////////*/
-// These are special endpoints that do not 100% fit the REST philosophy
-
-/*//////////////////////*/
 userRouter.post("/signup", singupValidator, signup);
 userRouter.post("/login", login);
 userRouter.post("/logout", logout);
 userRouter.post("/forgotPassword", forgotPassword);
-
-/*
-resetPassword is a patch request because we are modifying the
-password property of the user document
-*/
 userRouter.patch("/resetPassword/:token", resetPassword);
-
 userRouter.patch("/updatePassword", protect, updatePassword);
 
-userRouter.patch("/updateMe", protect, updateMe);
-userRouter.delete("/deleteMe", protect, deleteUser);
-
+/*//////////////////////*/
+/*BASIC CRUD ROUTE*/
+/*//////////////////////*/
+userRouter.get(
+  "/",
+  protect,
+  changedPasswordAfterToken,
+  restrictTo("Admin"),
+  getAllUsers
+);
 userRouter.get(
   "/closedAccounts",
   protect,
   restrictTo("Admin"),
   getAllInactiveUsers
 );
-
-/*//////////////////////*/
-/*BASIC CRUD ROUTE*/
-/*//////////////////////*/
-userRouter
-  .route("/")
-  .get(protect, changedPasswordAfterToken, restrictTo("Admin"), getAllUsers);
-
 userRouter.route("/user").get(protect, getUserById);
+userRouter.patch("/updateMe", protect, updateMe);
+userRouter.delete("/deleteMe", protect, deleteUser);
 
 module.exports = userRouter;

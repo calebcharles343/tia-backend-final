@@ -5,8 +5,8 @@
     "description": "Comprehensive API documentation for the Shopping List application",
     "version": "1.0.0"
   },
-  "host": "shopping-list-f1b6.onrender.com",
-  "basePath": "/api/v1/shopping-list/",
+  "host": "127.0.0.1:4001",
+  "basePath": "/api/v1/e-commerce/",
   "schemes": ["https"],
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
@@ -89,41 +89,6 @@
         "responses": {
           "200": { "description": "User logged out successfully." },
           "404": { "description": "User has to be logged in to log out." },
-          "500": { "description": "Internal server error." }
-        }
-      }
-    },
-    "/users": {
-      "get": {
-        "tags": ["User Management"],
-        "description": "Retrieve a list of all users. This operation is restricted to admin users.",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "responses": {
-          "200": { "description": "Users retrieved successfully." },
-          "401": { "description": "Unauthorized access." },
-          "500": { "description": "Internal server error." }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "tags": ["User Management"],
-        "description": "Retrieve a user by ID. This operation is restricted to admin user.",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to Retrieve."
-          }
-        ],
-        "responses": {
-          "200": { "description": "User retrieved successfully." },
-          "401": { "description": "Unauthorized access." },
           "500": { "description": "Internal server error." }
         }
       }
@@ -220,10 +185,82 @@
         }
       }
     },
-    "/users/deleteMe/{id}": {
+    "/users": {
+      "get": {
+        "tags": ["User Management"],
+        "description": "Retrieve a list of all users. This operation is restricted to admin users.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "Users retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/users/closedAccounts": {
+      "get": {
+        "tags": ["User Management"],
+        "description": "Retrieve a list of all users. This operation is restricted to admin users.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "Users retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": ["User Management"],
+        "description": "Retrieve a user by ID. This operation is restricted to admin user.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to Retrieve."
+          }
+        ],
+        "responses": {
+          "200": { "description": "User retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+
+    "/users/updateMe": {
       "delete": {
         "tags": ["User Management"],
-        "description": "Delete a user account. This operation is restricted to admin users.",
+        "description": "Update a user account",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the user to Update."
+          }
+        ],
+        "responses": {
+          "200": { "description": "User updated successfully." },
+          "400": { "description": "Invalid user ID." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "User not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+    "/users/deleteMe": {
+      "delete": {
+        "tags": ["User Management"],
+        "description": "Delete a user account.",
         "produces": ["application/json"],
         "parameters": [
           {
@@ -243,29 +280,32 @@
         }
       }
     },
-    "/items/addShopItem": {
+    "/product/create": {
       "post": {
-        "tags": ["Shop Items"],
-        "description": "Add items to store. Login is required and Restricted to admin user.",
+        "tags": ["Product"],
+        "description": "Add product to store. Login is required and Restricted to admin user.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
           {
             "name": "body",
             "in": "body",
-            "description": "Shop items credentials includes item_name and price.",
+            "description": "Product credentials includes name, description, category, price and stock.",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "item_name": { "type": "string" },
-                "price": { "type": "string" }
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "category": { "type": "string" },
+                "price": { "type": "num" },
+                "stock": { "type": "num" }
               }
             }
           }
         ],
         "responses": {
-          "200": { "description": "Item added successfully." },
+          "200": { "description": "Product added successfully." },
           "400": {
             "description": "You do not have permission to perform this action"
           },
@@ -274,23 +314,23 @@
         }
       }
     },
-    "/items": {
+    "/products": {
       "get": {
-        "tags": ["Shop Items"],
-        "description": "Retrieve a list of all shop items. Login is required.",
+        "tags": ["Product"],
+        "description": "Retrieve a list of all Product. Login is required.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "responses": {
-          "200": { "description": "Items retrieved successfully." },
+          "200": { "description": "Product retrieved successfully." },
           "401": { "description": "Unauthorized access." },
           "500": { "description": "Internal server error." }
         }
       }
     },
-    "/items/{id}": {
+    "/product/{productId}": {
       "get": {
-        "tags": ["Shop Items"],
-        "description": "Retrieve a shop item by ID. Login is required.",
+        "tags": ["Product"],
+        "description": "Retrieve a product by ID. Login is required.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -299,21 +339,21 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the item to Retrieve."
+            "description": "ID of the Product to Retrieve."
           }
         ],
         "responses": {
-          "200": { "description": "Item retrieved successfully." },
+          "200": { "description": "Product retrieved successfully." },
           "401": { "description": "Unauthorized access." },
           "500": { "description": "Internal server error." }
         }
       }
     },
 
-    "/items/updateShopItem/{id}": {
+    "/product/update/{productId}": {
       "patch": {
-        "tags": ["Shop Items"],
-        "description": "Update a shop item by ID. Login is required and Restricted to admin user",
+        "tags": ["Product"],
+        "description": "Update a product by ID. Login is required and Restricted to admin user",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -322,35 +362,38 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the item to update."
+            "description": "ID of the Product to update."
           },
           {
             "name": "body",
             "in": "body",
-            "description": "New item details.",
+            "description": "New Product details.",
             "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "item_name": { "type": "string" },
-                "price": { "type": "string" }
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "category": { "type": "string" },
+                "price": { "type": "num" },
+                "stock": { "type": "num" }
               }
             }
           }
         ],
         "responses": {
-          "200": { "description": "Item updated successfully." },
+          "200": { "description": "Product updated successfully." },
           "404": {
-            "description": "No Item with the proveided ID available in shop."
+            "description": "No Product with the proveided ID available in shop."
           },
           "500": { "description": "Internal server error." }
         }
       }
     },
-    "/items/deleteShopItem/{id}": {
+    "/product/delete/{productId}": {
       "delete": {
-        "tags": ["Shop Items"],
-        "description": "Delete a shop item. Login is required and Restricted to admin user.",
+        "tags": ["Product"],
+        "description": "Delete a product. Login is required and Restricted to admin user.",
         "produces": ["application/json"],
         "parameters": [
           {
@@ -358,14 +401,14 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "ID of the item to delete."
+            "description": "ID of the Product to delete."
           }
         ],
         "responses": {
-          "200": { "description": "item deleted successfully." },
-          "400": { "description": "Invalid item ID." },
+          "200": { "description": "Product deleted successfully." },
+          "400": { "description": "Invalid Product ID." },
           "401": { "description": "Unauthorized access." },
-          "404": { "description": "item not found." },
+          "404": { "description": "Product not found." },
           "500": { "description": "Internal server error." }
         }
       }
