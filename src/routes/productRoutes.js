@@ -13,16 +13,21 @@ const restrictTo = require("../middleware/restrictTo.js");
 
 const productRouter = express.Router();
 
-productRouter.post("/", protect, restrictTo("Admin"), createProduct);
+productRouter.post("/create", protect, restrictTo("Admin"), createProduct);
 
 productRouter.get("/", protect, getAllProducts);
 
 productRouter.get("/:productId", protect, getProductById);
 
-productRouter.patch("/:productId", protect, restrictTo("admin"), updateProduct);
+productRouter.patch(
+  "/update/:productId",
+  protect,
+  restrictTo("admin"),
+  updateProduct
+);
 
 productRouter.delete(
-  "/:productId",
+  "/delete/:productId",
   protect,
   restrictTo("Admin"),
   deleteProduct
