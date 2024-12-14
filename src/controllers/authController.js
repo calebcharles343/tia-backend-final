@@ -13,7 +13,6 @@ const {
   updateUserPasswordService,
 } = require("../services/authService.js");
 const comparePasswords = require("../utils/comparePasswords.js");
-const { getUserByIdService } = require("../services/userServices.js");
 const userByToken = require("../utils/userByToken.js");
 
 const signup = catchAsync(async (req, res, next) => {
