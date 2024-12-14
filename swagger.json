@@ -225,7 +225,7 @@
       }
     },
 
-    "/users/updateMe": {
+    "/users/user/updateMe": {
       "patch": {
         "tags": ["User Management"],
         "description": "Update a user account",
@@ -254,7 +254,7 @@
         }
       }
     },
-    "/users/deleteMe": {
+    "/users//user/deleteMe": {
       "delete": {
         "tags": ["User Management"],
         "description": "Delete a user account.",
@@ -268,7 +268,7 @@
         }
       }
     },
-    "/product/create": {
+    "/products/create": {
       "post": {
         "tags": ["Product"],
         "description": "Add product to the store. Login is required and restricted to admin users.",
@@ -314,7 +314,7 @@
         }
       }
     },
-    "/product/{productId}": {
+    "/products/{productId}": {
       "get": {
         "tags": ["Product"],
         "description": "Retrieve a product by ID. Login is required.",
@@ -336,7 +336,7 @@
         }
       }
     },
-    "/product/update/{productId}": {
+    "/products/update/{productId}": {
       "patch": {
         "tags": ["Product"],
         "description": "Update a product by ID. Login is required and restricted to admin users.",
@@ -400,7 +400,7 @@
       }
     },
 
-    "/order/create": {
+    "/orders/create": {
       "post": {
         "tags": ["Order"],
         "description": "Create a new order. Login is required.",
@@ -438,7 +438,7 @@
         }
       }
     },
-    "/order": {
+    "/orders": {
       "get": {
         "tags": ["Order"],
         "description": "Retrieve orders of the logged-in user. Login is required.",
@@ -450,7 +450,7 @@
         }
       }
     },
-    "/order/{orderId}": {
+    "/orders/{orderId}": {
       "patch": {
         "tags": ["Order"],
         "description": "Update the status of an order by ID. Login is required.",
@@ -488,7 +488,7 @@
         }
       }
     },
-    "/order/delete/{orderId}": {
+    "/orders/delete/{orderId}": {
       "delete": {
         "tags": ["Order"],
         "description": "Delete an order by ID. Login is required and restricted to admin users.",
@@ -512,7 +512,7 @@
       }
     },
 
-    "/review/create/{productId}": {
+    "/reviews/create/{productId}": {
       "post": {
         "tags": ["Review"],
         "description": "Create a review for a product. Login is required.",
@@ -548,7 +548,7 @@
         }
       }
     },
-    "/review/upate/{productId}/{reviewId}": {
+    "/reviews/update/{productId}/{reviewId}": {
       "patch": {
         "tags": ["Review"],
         "description": "Update a review for a product. Login is required.",
@@ -591,7 +591,7 @@
         }
       }
     },
-    "/review/delete/{productId}/{reviewId}": {
+    "/reviews/delete/{productId}/{reviewId}": {
       "delete": {
         "tags": ["Review"],
         "description": "Delete a review for a product. Login is required.",
@@ -642,7 +642,7 @@
         }
       }
     },
-    "/review/{productId}/{reviewId}": {
+    "/reviews/{productId}/{reviewId}": {
       "get": {
         "tags": ["Review"],
         "description": "Retrieve a specific review for a product. Login is required.",

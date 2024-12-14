@@ -50,7 +50,7 @@ userRouter.get(
   getAllInactiveUsers
 );
 userRouter.route("/user").get(protect, getUserById);
-userRouter.patch("/updateMe", protect, updateMe);
-userRouter.delete("/deleteMe", protect, deleteUser);
+userRouter.patch("/user/updateMe", protect, updateMe);
+userRouter.delete("/user/deleteMe", protect, deleteUser);
 
 module.exports = userRouter;
