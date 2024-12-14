@@ -11,6 +11,7 @@ const {
 const filterObj = require("../utils/filterObj.js");
 
 const handleResponse = require("../utils/handleResponse.js");
+const AppError = require("../utils/appError.js");
 
 const getAllUsers = catchAsync(async (req, res, next) => {
   const users = await getAllUsersService();
@@ -50,13 +51,12 @@ const updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, "name", "email", "avatar");
+  const filteredBody = filterObj(req.body, "name", "email");
 
   // 3) Update user record
   const updatedUser = await updateUserService(currentUser.id, {
     name: filteredBody.name,
     email: filteredBody.email,
-    avatar: filteredBody.avatar,
   });
 
   if (!updatedUser) {

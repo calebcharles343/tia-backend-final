@@ -226,10 +226,25 @@
     },
 
     "/users/updateMe": {
-      "delete": {
+      "patch": {
         "tags": ["User Management"],
         "description": "Update a user account",
         "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User Updating details including name and email.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "email": { "type": "string" }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": { "description": "User updated successfully." },
           "400": { "description": "Invalid user ID." },
