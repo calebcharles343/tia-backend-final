@@ -420,7 +420,7 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "productId": { "type": "string" },
+                      "productId": { "type": "number" },
                       "quantity": { "type": "number" }
                     }
                   }
@@ -459,7 +459,7 @@
             "name": "orderId",
             "in": "path",
             "required": true,
-            "type": "number",
+            "type": "string",
             "description": "ID of the order to update."
           },
           {
