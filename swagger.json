@@ -217,15 +217,6 @@
         "description": "Retrieve a user by ID. This operation is restricted to admin user.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to Retrieve."
-          }
-        ],
         "responses": {
           "200": { "description": "User retrieved successfully." },
           "401": { "description": "Unauthorized access." },
