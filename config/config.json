@@ -15,9 +15,9 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
+    "username": "admin",
     "password": null,
-    "database": "postgresql://shopping_store_anap_user:5nhtqyUMVoWEfnvM4nOV1e0kcqhDooA5@dpg-csrdoujtq21c73d1r4i0-a.frankfurt-postgres.render.com/shopping_store_anap",
+    "database": "postgresql://admin:RPExKixEOZYJB2olxkJAVouIJ0zsoZK9@dpg-cteod6d2ng1s738da7h0-a.frankfurt-postgres.render.com/tiafinaldb",
     "dialect": "postgres"
   }
 }
