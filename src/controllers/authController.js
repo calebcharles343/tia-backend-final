@@ -11,7 +11,7 @@ const {
   forgotPasswordService,
   findUserByResetTokenService,
   updateUserPasswordService,
-} = require("../services/AuthService.js");
+} = require("../services/authService.js");
 const comparePasswords = require("../utils/comparePasswords.js");
 const { getUserByIdService } = require("../services/userServices.js");
 const userByToken = require("../utils/userByToken.js");
