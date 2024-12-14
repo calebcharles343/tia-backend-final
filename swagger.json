@@ -7,7 +7,7 @@
   },
   "host": "tia-backend-final.onrender.com",
   "basePath": "/api/v1/e-commerce",
-  "schemes": ["http", "https"],
+  "schemes": ["https"],
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
   "securityDefinitions": {
@@ -688,23 +688,79 @@
     "/images": {
       "put": {
         "tags": ["Image Upload"],
-        "summary": "Upload an image",
-        "description": "Uploads an image to the server",
+        "summary": "Upload or update an image",
+        "description": "Uploads a new image or updates an existing image for a user or product. The request must include either the `x-user-id` or `x-product-id` header to identify the target entity.",
         "consumes": ["multipart/form-data"],
         "produces": ["application/json"],
         "parameters": [
           {
+            "name": "x-user-id",
+            "in": "header",
+            "description": "The ID of the user to upload/update the image for. Required if uploading a user avatar.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "x-product-id",
+            "in": "header",
+            "description": "The ID of the product to upload/update the image for. Required if uploading a product image.",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "image",
             "in": "formData",
-            "description": "The image file to upload",
+            "description": "The image file to upload.",
             "required": true,
             "type": "file"
           }
         ],
         "responses": {
-          "200": { "description": "Image uploaded successfully." },
-          "400": { "description": "Invalid input." },
-          "500": { "description": "Internal server error." }
+          "200": {
+            "description": "Image updated successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Image updated successfully"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "newKey": {
+                      "type": "string",
+                      "example": "uploads/userAvatar-12345/example.png"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. Missing required parameters or invalid input.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Bad request: Missing required parameters"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Failed to upload new image"
+                }
+              }
+            }
+          }
         }
       }
     }
