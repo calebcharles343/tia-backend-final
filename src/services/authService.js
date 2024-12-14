@@ -9,7 +9,7 @@ const sendMail = require("../utils/sendMail.js");
 const generateResetToken = require("../utils/generateResetToken.js");
 const updateUserWithResetToken = require("../utils/updateUserWithResetToken.js");
 const { Op } = require("sequelize");
-const comparePasswords = require("../utils/comparePasswords.js");
+const comparePassword = require("../utils/comparePassword.js");
 
 const signupService = async (name, email, hashedPassword, role = "User") => {
   const newUser = await User.create({
@@ -26,7 +26,7 @@ const loginService = async (email, password, next) => {
     where: { email },
   });
 
-  if (!user || !(await comparePasswords(password, user.password))) {
+  if (!user || !(await comparePassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
   return user;

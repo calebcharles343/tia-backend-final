@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const AppError = require("./appError");
 
-const comparePasswords = async (currentPassword, userPassword) => {
+const comparePassword = async (currentPassword, userPassword) => {
   if (!currentPassword || !userPassword) {
     throw new AppError(
       "Both current password and user password are required.",
@@ -17,4 +17,4 @@ const comparePasswords = async (currentPassword, userPassword) => {
   return isMatch;
 };
 
-module.exports = comparePasswords;
+module.exports = comparePassword;
