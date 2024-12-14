@@ -7,6 +7,8 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+console.log(process.env.DATABASE_URL, "❌❌❌❌");
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const sequelize = isProduction

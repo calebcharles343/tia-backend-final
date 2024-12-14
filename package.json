@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "npm run && nodemon src/server.js",
     "prestart": "npx sequelize-cli db:migrate",
-    "start:prod": "export NODE_ENV=production && node src/server.js",
-    "start:prod2": "SET NODE_ENV=production & nodemon src/server.js"
+    "start:prod": "cross-env SET NODE_ENV=production node src/app.js",
+    "start:prod2": "cross-env SET NODE_ENV=production node src/app.js",
+    "start": "cross-env SET NODE_ENV=production node src/app.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "@aws-sdk/s3-request-presigner": "^3.705.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

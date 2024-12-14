@@ -20,10 +20,11 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(helmet());
-app.use(express.json({ limit: "10kb" }));
 app.use(cors());
+app.use(express.json({ limit: "10kb" }));
+
+// Security Headers
+app.use(helmet());
 
 // Rate Limiting
 const limiter = rateLimit({
@@ -31,11 +32,12 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour!",
 });
-app.use("/api/v1/e-commerce", limiter);
+app.use("/api", limiter);
 
 // Swagger Documentation
+// Apply specific CORS handling for Swagger UI if needed
 app.use(
-  "/api/v1/e-commerce/api-docs",
+  "/e-commerce/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument)
 );

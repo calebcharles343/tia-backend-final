@@ -5,8 +5,8 @@
     "description": "Comprehensive API documentation for e-commerce application",
     "version": "1.0.0"
   },
-  "host": "http://127.0.0.1:5002/",
-  "basePath": "/api/v1/cohort3-fullstack/",
+  "host": "127.0.0.1:5002",
+  "basePath": "/api/v1/e-commerce",
   "schemes": ["http", "https"],
   "consumes": ["application/json", "multipart/form-data"],
   "produces": ["application/json"],
@@ -680,6 +680,30 @@
           "200": { "description": "Review retrieved successfully." },
           "401": { "description": "Unauthorized access." },
           "404": { "description": "Review or product not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+
+    "/images": {
+      "put": {
+        "tags": ["Image Upload"],
+        "summary": "Upload an image",
+        "description": "Uploads an image to the server",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "description": "The image file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": { "description": "Image uploaded successfully." },
+          "400": { "description": "Invalid input." },
           "500": { "description": "Internal server error." }
         }
       }
