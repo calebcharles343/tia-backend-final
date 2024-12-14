@@ -230,15 +230,6 @@
         "tags": ["User Management"],
         "description": "Update a user account",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to Update."
-          }
-        ],
         "responses": {
           "200": { "description": "User updated successfully." },
           "400": { "description": "Invalid user ID." },
@@ -253,15 +244,6 @@
         "tags": ["User Management"],
         "description": "Delete a user account.",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "ID of the user to delete."
-          }
-        ],
         "responses": {
           "200": { "description": "User deleted successfully." },
           "400": { "description": "Invalid user ID." },
@@ -271,7 +253,6 @@
         }
       }
     },
-
     "/product/create": {
       "post": {
         "tags": ["Product"],
