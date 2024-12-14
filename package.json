@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run && nodemon src/server.js",
-    "prestart": "npx sequelize-cli db:migrate",
     "start:prod": "cross-env SET NODE_ENV=production node src/app.js",
     "start:prod2": "cross-env SET NODE_ENV=production node src/app.js",
     "start": "node src/app.js"
