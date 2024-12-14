@@ -376,7 +376,7 @@
         }
       }
     },
-    "/product/delete/{productId}": {
+    "/products/delete/{productId}": {
       "delete": {
         "tags": ["Product"],
         "description": "Delete a product. Login is required and restricted to admin users.",
