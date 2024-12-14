@@ -201,20 +201,20 @@
     "/users/closedAccounts": {
       "get": {
         "tags": ["User Management"],
-        "description": "Retrieve a list of all users. This operation is restricted to admin users.",
+        "description": "Retrieve a list of all deleted users. This operation is restricted to admin users.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "responses": {
-          "200": { "description": "Users retrieved successfully." },
+          "200": { "description": "Deleted Users retrieved successfully." },
           "401": { "description": "Unauthorized access." },
           "500": { "description": "Internal server error." }
         }
       }
     },
-    "/user": {
+    "/users/user": {
       "get": {
         "tags": ["User Management"],
-        "description": "Retrieve a user by ID. This operation is restricted to admin user.",
+        "description": "Retrieve current user.",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "responses": {

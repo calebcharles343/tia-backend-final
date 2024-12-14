@@ -20,12 +20,12 @@ const sequelize = isProduction
       },
     })
   : new Sequelize(
-      process.env.DATABASE, // Local database name
-      process.env.USER, // Local username
-      process.env.PASSWORD, // Local password
+      process.env.DB_DATABASE, // Local database name
+      process.env.DB_USER, // Local username
+      process.env.DB_PASSWORD, // Local password
       {
-        host: process.env.HOST, // Local host
-        port: process.env.DBPORT, // Local port
+        host: process.env.DB_HOST, // Local host
+        port: process.env.DB_PORT, // Local port
         dialect: "postgres",
         logging: console.log, // Enable logging in development
       }
