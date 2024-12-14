@@ -424,9 +424,7 @@
                       "quantity": { "type": "number" }
                     }
                   }
-                },
-                "address": { "type": "string" },
-                "paymentMethod": { "type": "string" }
+                }
               }
             }
           }
@@ -461,7 +459,7 @@
             "name": "orderId",
             "in": "path",
             "required": true,
-            "type": "string",
+            "type": "number",
             "description": "ID of the order to update."
           },
           {
