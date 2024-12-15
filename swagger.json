@@ -532,8 +532,8 @@
             "schema": {
               "type": "object",
               "properties": {
-                "rating": { "type": "number", "minimum": 1, "maximum": 5 },
-                "comment": { "type": "string" }
+                "review": { "type": "string" },
+                "rating": { "type": "number", "minimum": 1, "maximum": 5 }
               }
             }
           }
