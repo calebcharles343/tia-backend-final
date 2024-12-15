@@ -13,19 +13,19 @@ const {
 
 const reviewRouter = express.Router();
 
-reviewRouter.post("/review/create/:productId", protect, createReview);
+reviewRouter.post("/create/:productId", protect, createReview);
 reviewRouter.patch(
-  "/review/upate/:productId/:reviewId",
+  "/update/:productId/:reviewId",
   protect,
   updateProductReview
 );
 reviewRouter.delete(
-  "/review/:productId/:reviewId",
+  "/delete/:productId/:reviewId",
   protect,
   deleteProductReview
 );
 
 reviewRouter.get("/:productId", protect, getProductReviews);
-reviewRouter.get("/review/:productId/:reviewId", protect, getProductReview);
+reviewRouter.get("/:productId/:reviewId", protect, getProductReview);
 
 module.exports = reviewRouter;
