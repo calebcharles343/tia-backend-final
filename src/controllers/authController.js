@@ -1,6 +1,5 @@
 "use strict";
 const bcrypt = require("bcrypt");
-
 const AppError = require("../utils/appError.js");
 const handleResponse = require("../utils/handleResponse.js");
 const catchAsync = require("../middleware/catchAsync.js");
