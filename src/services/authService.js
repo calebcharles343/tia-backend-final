@@ -31,7 +31,7 @@ const loginService = async (email, password, next) => {
     return next(new AppError("Incorrect email or password", 401));
   }
 
-  const avatarId = `userAvatar-${id}`;
+  const avatarId = `userAvatar-${user.id}`;
   const { presignedUrls, err } = await getUserPresignedUrls(avatarId);
 
   if (err) {
