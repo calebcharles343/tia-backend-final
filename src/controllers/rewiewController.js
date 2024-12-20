@@ -85,18 +85,21 @@ const getProductReview = catchAsync(async (req, res, next) => {
 const updateProductReview = catchAsync(async (req, res, next) => {
   const { rating, review } = req.body;
   const { productId, reviewId } = req.params;
-  const product = await getProductByIdService(productId);
 
+  // Ensure the product exists
+  const product = await getProductByIdService(productId);
   if (!product) {
     return handleResponse(res, 404, "Product not found.");
   }
 
-  const exitstingReview = await getReviewByIdService(productId, reviewId);
+  // Find the existing review for the specified product
+  const existingReview = await getReviewByIdService(productId, reviewId);
 
-  if (!exitstingReview) {
+  if (!existingReview) {
     return handleResponse(res, 404, "Review not found.");
   }
 
+  // Update the review
   const updatedReview = await updateProductReviewService(
     reviewId,
     rating,
@@ -104,7 +107,7 @@ const updateProductReview = catchAsync(async (req, res, next) => {
   );
 
   if (!updatedReview) {
-    return handleResponse(res, 404, "Review not found.");
+    return handleResponse(res, 404, "Failed to update the review.");
   }
 
   // Recalculate the average rating for the product

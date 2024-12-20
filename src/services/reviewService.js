@@ -48,9 +48,13 @@ const getAllProductReviewService = async (productId) => {
   return sanitizedReviews;
 };
 
-const getReviewByIdService = async (productId, userId) => {
+const getReviewByIdService = async (productId, reviewId) => {
+  // Check if a review exists with the specified productId and reviewId
   const review = await Review.findOne({
-    where: { productId, userId },
+    where: {
+      id: reviewId, // Match the reviewId against the primary key of Review
+      productId, // Ensure it belongs to the correct product
+    },
   });
   return review;
 };
