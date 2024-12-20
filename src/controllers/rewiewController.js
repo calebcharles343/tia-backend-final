@@ -10,8 +10,8 @@ const {
   getAllProductReviewService,
   calcAverageRatings,
   getReviewByIdService,
-  updateProductService,
-  deleteProductService,
+  updateProductReviewService,
+  deleteProductReviweService,
 } = require("../services/reviewService.js");
 
 // Create a new review
@@ -97,7 +97,11 @@ const updateProductReview = catchAsync(async (req, res, next) => {
     return handleResponse(res, 404, "Review not found.");
   }
 
-  const updatedReview = await updateProductService(reviewId, rating, review);
+  const updatedReview = await updateProductReviewService(
+    reviewId,
+    rating,
+    review
+  );
 
   if (!updatedReview) {
     return handleResponse(res, 404, "Review not found.");
@@ -113,7 +117,7 @@ const updateProductReview = catchAsync(async (req, res, next) => {
 const deleteProductReview = catchAsync(async (req, res, next) => {
   const { productId, reviewId } = req.params;
 
-  const deletedReview = await deleteProductService(reviewId);
+  const deletedReview = await deleteProductReviweService(reviewId);
 
   if (!deletedReview) {
     return handleResponse(res, 404, "Review not found.");

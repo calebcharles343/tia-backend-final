@@ -55,7 +55,7 @@ const getReviewByIdService = async (productId, userId) => {
   return review;
 };
 
-const updateProductService = async (reviewId, rating, review) => {
+const updateProductReviewService = async (reviewId, rating, review) => {
   const updatedReview = await Review.update(
     { rating, review },
     { where: { id: reviewId }, returning: true, plain: true }
@@ -64,7 +64,7 @@ const updateProductService = async (reviewId, rating, review) => {
   return updatedReview[1];
 };
 
-const deleteProductService = async (reviewId) => {
+const deleteProductReviweService = async (reviewId) => {
   const deletedReview = await Review.destroy({
     where: { id: reviewId },
   });
@@ -77,6 +77,6 @@ module.exports = {
   getAllProductReviewService,
   calcAverageRatings,
   getReviewByIdService,
-  updateProductService,
-  deleteProductService,
+  updateProductReviewService,
+  deleteProductReviweService,
 };
