@@ -1,6 +1,7 @@
 "use strict";
 
 const { getUserPresignedUrls } = require("../models/A3Bucket.js");
+const Order = require("../models/Order.js");
 const User = require("../models/User.js"); // Import the Sequelize model
 
 // Fetch all active users
