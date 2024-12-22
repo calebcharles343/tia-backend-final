@@ -1,9 +1,7 @@
 "use strict";
 
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db.js"); // Your Sequelize instance
-const Order = require("./Order.js");
-const Review = require("./Review.js");
+const sequelize = require("../config/db.js");
 
 const User = sequelize.define(
   "User",
@@ -32,7 +30,7 @@ const User = sequelize.define(
       allowNull: false,
     },
     avatar: {
-      type: DataTypes.TEXT, // Allow longer descriptions
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     active: {
@@ -55,39 +53,9 @@ const User = sequelize.define(
   },
   {
     tableName: "users",
-    timestamps: true, // Enable timestamps for auditing
-    indexes: [
-      { unique: true, fields: ["email"] }, // Index for faster lookups
-    ],
+    timestamps: true,
+    indexes: [{ unique: true, fields: ["email"] }],
   }
 );
-
-// Associations
-
-// User -> Order
-User.hasMany(Order, {
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "userOrders",
-});
-
-Order.belongsTo(User, {
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "user",
-});
-
-// User -> Review
-User.hasMany(Review, {
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "userReviews",
-});
-
-Review.belongsTo(User, {
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "user",
-});
 
 module.exports = User;

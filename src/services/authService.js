@@ -1,6 +1,6 @@
 "use strict";
 
-const User = require("../models/User.js");
+const { User, Order } = require("../models/index.js");
 const AppError = require("../utils/appError.js");
 const crypto = require("crypto");
 
@@ -25,6 +25,10 @@ const signupService = async (name, email, hashedPassword, role = "User") => {
 const loginService = async (email, password, next) => {
   const user = await User.findOne({
     where: { email },
+    include: {
+      model: Order,
+      as: "Orders", // Include associated orders
+    },
   });
 
   if (!user || !(await comparePasswords(password, user.password))) {

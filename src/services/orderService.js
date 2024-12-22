@@ -1,9 +1,11 @@
 "use strict";
 
-const Order = require("../models/Order.js");
-const OrderItem = require("../models/OrderItem.js");
-const Product = require("../models/Product.js");
+// const Order = require("../models/Order.js");
+// const OrderItem = require("../models/OrderItem.js");
+// const Product = require("../models/Product.js");
 const AppError = require("../utils/appError.js");
+
+const { Order, OrderItem, Product } = require("../models/index.js");
 
 const createOrderService = async (userId, items) => {
   // Fetch product details from the database

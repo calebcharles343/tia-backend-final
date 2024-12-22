@@ -2,7 +2,6 @@
 
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.js");
-const OrderItem = require("./OrderItem.js");
 
 const Order = sequelize.define(
   "Order",
@@ -13,19 +12,14 @@ const Order = sequelize.define(
       primaryKey: true,
     },
     userId: {
-      // Updated to camelCase for consistency
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "users", // Updated to match table name
-        key: "id",
-      },
     },
     totalPrice: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
-        min: 0, // Ensure total price is non-negative
+        min: 0,
       },
     },
     status: {
@@ -36,26 +30,9 @@ const Order = sequelize.define(
   },
   {
     tableName: "orders",
-    timestamps: false, // Keep timestamps for better tracking
-    indexes: [
-      { fields: ["userId"] }, // Index for user-specific queries
-      { fields: ["status"] }, // Index for filtering by status
-    ],
+    timestamps: false,
+    indexes: [{ fields: ["userId"] }, { fields: ["status"] }],
   }
 );
-
-// Associations
-
-// Order -> OrderItems
-Order.hasMany(OrderItem, {
-  foreignKey: { name: "orderId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "items",
-});
-OrderItem.belongsTo(Order, {
-  foreignKey: { name: "orderId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "order",
-});
 
 module.exports = Order;

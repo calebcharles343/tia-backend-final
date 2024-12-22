@@ -15,6 +15,7 @@ const reviewRouter = require("./routes/reviewRoutes.js");
 const a3BucketRouter = require("./routes/a3BucketRoutes.js");
 const multer = require("multer");
 const { memoryStorage } = multer;
+// const paymentRoutes = require("./routes/paymentRoutes");
 
 dotenv.config();
 
@@ -54,7 +55,7 @@ app.use("/api/v1/e-commerce/products", productRouter);
 app.use("/api/v1/e-commerce/orders", orderRouter);
 app.use("/api/v1/e-commerce/reviews", reviewRouter);
 app.use("/api/v1/e-commerce/images", a3BucketRouter);
-
+// app.use("/api/v1/e-commerce/payment", paymentRoutes);
 // Error Handling
 app.use(errorHandler);
 

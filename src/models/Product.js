@@ -2,7 +2,6 @@
 
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.js");
-const Review = require("./Review.js");
 
 const Product = sequelize.define(
   "Product",
@@ -22,7 +21,7 @@ const Product = sequelize.define(
       },
     },
     description: {
-      type: DataTypes.TEXT, // Allow longer descriptions
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: {
         notEmpty: {
@@ -43,10 +42,9 @@ const Product = sequelize.define(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
-        min: 0, // Ensure price is non-negative
+        min: 0,
       },
     },
-
     avatar: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -55,7 +53,7 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min: 0, // Ensure stock is non-negative
+        min: 0,
       },
     },
     ratingCount: {
@@ -72,26 +70,8 @@ const Product = sequelize.define(
   {
     tableName: "products",
     timestamps: true,
-    indexes: [
-      { fields: ["name"] }, // Updated index field
-      { fields: ["category"] }, // Add index for category for filtering
-    ],
+    indexes: [{ fields: ["name"] }, { fields: ["category"] }],
   }
 );
-
-// Associations
-
-// Product -> Review
-Product.hasMany(Review, {
-  foreignKey: { name: "productId", allowNull: false },
-  onDelete: "CASCADE", // Ensure reviews are deleted when product is deleted
-  as: "reviews",
-});
-
-Review.belongsTo(Product, {
-  foreignKey: { name: "productId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "product",
-});
 
 module.exports = Product;

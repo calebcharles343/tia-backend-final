@@ -1,7 +1,8 @@
 "use strict";
 
 const { getUserPresignedUrls } = require("../models/A3Bucket.js");
-const Product = require("../models/Product.js");
+// const Product = require("../models/Product.js");
+const { Product } = require("../models/index.js");
 
 const getProductByIdService = async (id) => {
   const product = await Product.findOne({ where: { id } });

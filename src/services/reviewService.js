@@ -1,7 +1,9 @@
 const sequelize = require("../config/db");
-const Product = require("../models/Product");
-const Review = require("../models/Review");
-const User = require("../models/User");
+// const Product = require("../models/Product");
+// const Review = require("../models/Review");
+// const User = require("../models/User");
+
+const { Review, Product, User } = require("../models/index.js");
 
 const calcAverageRatings = async (productId) => {
   const stats = await Review.findAll({

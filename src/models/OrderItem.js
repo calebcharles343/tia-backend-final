@@ -2,7 +2,6 @@
 
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.js");
-const Product = require("./Product.js");
 
 const OrderItem = sequelize.define(
   "OrderItem",
@@ -13,64 +12,34 @@ const OrderItem = sequelize.define(
       primaryKey: true,
     },
     orderId: {
-      // Updated to camelCase for consistency
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "orders", // Updated to match table name
-        key: "id",
-      },
-      onDelete: "CASCADE",
     },
     productId: {
-      // Updated to camelCase for consistency
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "products", // Updated to match table name
-        key: "id",
-      },
-      onDelete: "CASCADE",
     },
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1,
       validate: {
-        min: 1, // Ensure quantity is at least 1
+        min: 1,
       },
     },
     pricePerItem: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
       validate: {
-        min: 0, // Ensure price is non-negative
+        min: 0,
       },
     },
   },
   {
-    tableName: "order_items", // Updated table name for consistency with naming conventions
+    tableName: "order_items",
     timestamps: false,
-    indexes: [
-      { fields: ["orderId"] }, // Index for optimized lookups
-      { fields: ["productId"] }, // Index for optimized lookups
-    ],
+    indexes: [{ fields: ["orderId"] }, { fields: ["productId"] }],
   }
 );
-
-// Associations
-
-// OrderItem -> Product
-Product.hasMany(OrderItem, {
-  foreignKey: { name: "productId", allowNull: false },
-  onDelete: "CASCADE", // Ensures cleanup when product is deleted
-  as: "orderItems",
-});
-
-OrderItem.belongsTo(Product, {
-  foreignKey: { name: "productId", allowNull: false },
-  onDelete: "CASCADE",
-  as: "product",
-});
 
 module.exports = OrderItem;

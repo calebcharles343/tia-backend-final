@@ -1,6 +1,6 @@
 "use strict";
 
-const { DataTypes, models } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.js");
 
 const Review = sequelize.define(
@@ -10,6 +10,14 @@ const Review = sequelize.define(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    productId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     review: {
       type: DataTypes.STRING,
@@ -34,61 +42,19 @@ const Review = sequelize.define(
         },
       },
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   },
   {
-    tableName: "reviews", // Explicit table name for clarity
-    timestamps: true, // Enable createdAt/updatedAt
-    paranoid: false, // Enable soft deletes if needed
+    tableName: "reviews",
+    timestamps: true,
     indexes: [
       {
         unique: true,
-        fields: ["productId", "userId"], // User can review a product only once
+        fields: ["productId", "userId"],
       },
-      {
-        fields: ["productId"], // Optimize queries fetching reviews by product
-      },
+      { fields: ["productId"] },
+      { fields: ["userId"] },
     ],
   }
 );
-
-// Associations
-
-// Review -> Product
-Review.associate = (models) => {
-  // A review belongs to a single product
-  Review.belongsTo(models.Product, {
-    foreignKey: "productId",
-    as: "product", // Alias for the association
-    onDelete: "CASCADE", // Delete reviews when the product is deleted
-  });
-
-  // A review belongs to a single user
-  Review.belongsTo(models.User, {
-    foreignKey: "userId",
-    as: "user", // Alias for the association
-    onDelete: "CASCADE", // Delete reviews when the user is deleted
-  });
-};
-
-// Review.belongsTo(Product, {
-//   foreignKey: "productId",
-//   as: "product", // Alias for the association
-//   onDelete: "CASCADE", // Delete reviews when the product is deleted
-// });
-
-// // Review -> User
-// Review.belongsTo(User, {
-//   foreignKey: "userId",
-//   as: "user", // Alias for the association
-//   onDelete: "CASCADE", // Delete reviews when the user is deleted
-// });
 
 module.exports = Review;
