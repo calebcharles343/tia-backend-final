@@ -23,6 +23,9 @@ const getUserByIdService = async (id) => {
   try {
     const user = await User.findOne({
       where: { id },
+      include: {
+        model: Order, // Include associated orders
+      },
     });
 
     if (!user) {
@@ -38,7 +41,7 @@ const getUserByIdService = async (id) => {
       user.avatar = presignedUrls[0]?.url || undefined;
     }
 
-    // user.password = undefined;
+    // user.password = undefined; // Optionally remove or hash password before returning
 
     return user;
   } catch (error) {
