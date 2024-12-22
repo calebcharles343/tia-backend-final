@@ -448,7 +448,7 @@
         }
       }
     },
-    "/orders/{orderId}": {
+    "/orders/update/{orderId}": {
       "patch": {
         "tags": ["Order"],
         "description": "Update the status of an order by ID. Login is required.",

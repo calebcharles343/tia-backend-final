@@ -19,7 +19,7 @@ orderRouter.post("/create", protect, createOrder);
 orderRouter.get("/", protect, getUserOrders);
 
 orderRouter.patch(
-  "/:orderId",
+  "/update/:orderId",
   protect,
   orderStatus("pending", "completed", "cancelled"),
   updateOrderStatus
