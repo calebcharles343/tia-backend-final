@@ -8,7 +8,9 @@ const signToken = (id) => {
   });
 };
 
-// Create and send the JWT token
+/*////////////////////////////////////// */
+/*////////////////////////////////////// */
+
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user.id);
 
