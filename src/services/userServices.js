@@ -2,7 +2,7 @@
 
 const { getUserPresignedUrls } = require("../models/A3Bucket.js");
 
-const { User, Order } = require("../models/index.js");
+const { User, Order, OrderItem, Product } = require("../models/index.js");
 
 // Fetch all active users
 const getAllUsersService = async () => {
@@ -27,6 +27,18 @@ const getUserByIdService = async (id) => {
       include: {
         model: Order,
         as: "Orders", // Include associated orders
+        include: [
+          {
+            model: OrderItem,
+            as: "Items", // Match alias defined in model
+            include: [
+              {
+                model: Product,
+                as: "Product", // Match alias defined in model
+              },
+            ],
+          },
+        ],
       },
     });
 

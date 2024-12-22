@@ -1,10 +1,6 @@
 "use strict";
 
-// const Order = require("../models/Order.js");
-// const OrderItem = require("../models/OrderItem.js");
-// const Product = require("../models/Product.js");
 const AppError = require("../utils/appError.js");
-
 const { Order, OrderItem, Product } = require("../models/index.js");
 
 const createOrderService = async (userId, items) => {
@@ -65,11 +61,11 @@ const getUserOrdersSevice = async (userId) => {
     include: [
       {
         model: OrderItem,
-        as: "items",
+        as: "Items", // Match alias defined in model
         include: [
           {
             model: Product,
-            as: "product",
+            as: "Product", // Match alias defined in model
           },
         ],
       },

@@ -1,6 +1,6 @@
 "use strict";
 
-const { User, Order } = require("../models/index.js");
+const { User, Order, OrderItem, Product } = require("../models/index.js");
 const AppError = require("../utils/appError.js");
 const crypto = require("crypto");
 
@@ -28,6 +28,18 @@ const loginService = async (email, password, next) => {
     include: {
       model: Order,
       as: "Orders", // Include associated orders
+      include: [
+        {
+          model: OrderItem,
+          as: "Items", // Match alias defined in model
+          include: [
+            {
+              model: Product,
+              as: "Product", // Match alias defined in model
+            },
+          ],
+        },
+      ],
     },
   });
 
