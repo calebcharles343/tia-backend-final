@@ -23,7 +23,7 @@ const createSendToken = (user, statusCode, res) => {
 
   user.password = undefined;
 
-  res.cookie("jwt", token, Options);
+  res.cookie("jwt", token, cookieOptions);
 
   handleResponse(res, statusCode, "Authentication successful", {
     token,
