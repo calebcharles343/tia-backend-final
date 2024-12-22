@@ -25,7 +25,8 @@ const getUserByIdService = async (id) => {
     const user = await User.findOne({
       where: { id },
       include: {
-        model: Order, // Include associated orders
+        model: Order,
+        as: "Orders", // Include associated orders
       },
     });
 
