@@ -436,6 +436,18 @@
         }
       }
     },
+    "/orders/admin": {
+      "get": {
+        "tags": ["Order"],
+        "description": "Retrieve entire customer orders restricted to Admin. Login is required.",
+        "produces": ["application/json"],
+        "responses": {
+          "200": { "description": "Admin orders retrieved successfully." },
+          "401": { "description": "Unauthorized access." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
     "/orders": {
       "get": {
         "tags": ["Order"],

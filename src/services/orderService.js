@@ -1,7 +1,7 @@
 "use strict";
 
 const AppError = require("../utils/appError.js");
-const { Order, OrderItem, Product } = require("../models/index.js");
+const { User, Order, OrderItem, Product } = require("../models/index.js");
 
 const createOrderService = async (userId, items) => {
   // Fetch product details from the database
@@ -55,6 +55,28 @@ const createOrderService = async (userId, items) => {
   return order;
 };
 
+const getAllAdminOrdersService = async () => {
+  const orders = await Order.findAll({
+    include: [
+      {
+        model: User,
+        as: "User",
+      },
+      {
+        model: OrderItem,
+        as: "Items", // Match alias defined in model
+        include: [
+          {
+            model: Product,
+            as: "Product", // Match alias defined in model
+          },
+        ],
+      },
+    ],
+  });
+  return orders;
+};
+
 const getUserOrdersSevice = async (userId) => {
   const orders = await Order.findAll({
     where: { userId: userId },
@@ -96,6 +118,7 @@ const deleteOrderSevice = async (id) => {
 };
 
 module.exports = {
+  getAllAdminOrdersService,
   createOrderService,
   getUserOrdersSevice,
   getOrderByIdSevice,

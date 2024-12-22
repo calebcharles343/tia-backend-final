@@ -9,6 +9,7 @@ const {
   getOrderByIdSevice,
   updateOrderStatusSevice,
   deleteOrderSevice,
+  getAllAdminOrdersService,
 } = require("../services/orderService.js");
 
 const handleResponse = require("../utils/handleResponse.js");
@@ -31,6 +32,15 @@ const createOrder = catchAsync(async (req, res, next) => {
   handleResponse(res, 201, "Order created successfully", order);
 });
 
+// Get all orders for Admin =
+const getAllAdminOrders = catchAsync(async (req, res, next) => {
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+
+  const orders = await getAllAdminOrdersService();
+
+  handleResponse(res, 200, "Admin orders fetched successfully", orders);
+});
 // Get all orders of the authenticated user
 const getUserOrders = catchAsync(async (req, res, next) => {
   const currentUser = await userByToken(req, res);
@@ -66,6 +76,7 @@ const deleteOrder = catchAsync(async (req, res, next) => {
 
 module.exports = {
   createOrder,
+  getAllAdminOrders,
   getUserOrders,
   updateOrderStatus,
   deleteOrder,
