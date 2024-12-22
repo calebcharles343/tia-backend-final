@@ -2,10 +2,24 @@
 
 const { getUserPresignedUrls } = require("../models/A3Bucket.js");
 // const Product = require("../models/Product.js");
-const { Product } = require("../models/index.js");
+const { Product, Review, User } = require("../models/index.js");
 
 const getProductByIdService = async (id) => {
-  const product = await Product.findOne({ where: { id } });
+  const product = await Product.findOne({
+    where: { id },
+    include: [
+      {
+        model: Review,
+        as: "Reviews",
+        include: [
+          {
+            model: User,
+            as: "User",
+          },
+        ],
+      },
+    ],
+  });
   if (!product) {
     console.error(`Product with ID ${id} not found`);
     return null;

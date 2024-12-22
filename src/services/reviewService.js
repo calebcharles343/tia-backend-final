@@ -39,11 +39,11 @@ const createReviewService = async (productId, userId, rating, review) => {
 const getAllProductReviewService = async (productId) => {
   const reviews = await Review.findAll({
     where: { productId: productId },
-    include: [{ model: User, as: "user" }],
+    include: [{ model: User, as: "User" }],
   });
 
   const sanitizedReviews = reviews.map((review) => {
-    const { id, name, avatar } = review.user;
+    const { id, name, avatar } = review.User;
     return { ...review.toJSON(), user: { id, name, avatar } };
   });
 
