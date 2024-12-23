@@ -13,13 +13,35 @@ const comparePasswords = require("../utils/comparePasswords.js");
 const { getUserPresignedUrls } = require("../models/A3Bucket.js");
 
 const signupService = async (name, email, hashedPassword, role = "User") => {
+  // Create the new user
   const newUser = await User.create({
     name,
     email,
     password: hashedPassword,
     role: role,
   });
-  return newUser;
+
+  // Fetch the user again with associated data
+  const userWithAssociations = await User.findOne({
+    where: { id: newUser.id },
+    include: {
+      model: Order,
+      include: [
+        {
+          model: OrderItem,
+          as: "Items",
+          include: [
+            {
+              model: Product,
+              as: "Product",
+            },
+          ],
+        },
+      ],
+    },
+  });
+
+  return userWithAssociations;
 };
 
 const loginService = async (email, password, next) => {
