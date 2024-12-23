@@ -23,17 +23,18 @@ const signupService = async (name, email, hashedPassword, role = "User") => {
 
   // Fetch the user again with associated data
   const userWithAssociations = await User.findOne({
-    where: { id: newUser.id },
+    where: { email },
     include: {
       model: Order,
+      as: "Orders", // Include associated orders
       include: [
         {
           model: OrderItem,
-          as: "Items",
+          as: "Items", // Match alias defined in model
           include: [
             {
               model: Product,
-              as: "Product",
+              as: "Product", // Match alias defined in model
             },
           ],
         },
