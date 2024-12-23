@@ -28,6 +28,12 @@ orderRouter.patch(
   orderStatus("pending", "completed", "cancelled"),
   updateOrderStatus
 );
+orderRouter.patch(
+  "/cancel/:orderId",
+  protect,
+  orderStatus("cancelled"),
+  updateOrderStatus
+);
 
 orderRouter.delete("/delete/:orderId", protect, deleteOrder);
 
