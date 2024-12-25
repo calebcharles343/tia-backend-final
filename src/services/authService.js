@@ -82,9 +82,11 @@ const loginService = async (email, password, next) => {
 };
 
 const sendResetEmail = async (user, resetToken, req) => {
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
+  // const resetURL = `${req.protocol}://${req.get(
+  //   "host"
+  // )}/api/v1/users/resetPassword/${resetToken}`;
+  const resetURL = `https://tia-finalp.netlify.app/auth/resetPassword/${resetToken}`;
+
   const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   await sendMail({
