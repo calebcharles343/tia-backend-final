@@ -30,7 +30,7 @@ const Order = sequelize.define(
   },
   {
     tableName: "orders",
-    timestamps: false,
+    timestamps: true,
     indexes: [{ fields: ["userId"] }, { fields: ["status"] }],
   }
 );
