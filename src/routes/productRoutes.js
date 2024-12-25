@@ -15,9 +15,12 @@ const productRouter = express.Router();
 
 productRouter.post("/create", protect, restrictTo("Admin"), createProduct);
 
-productRouter.get("/", protect, getAllProducts);
+// productRouter.get("/", protect, getAllProducts);
 
-productRouter.get("/:productId", protect, getProductById);
+// productRouter.get("/:productId", protect, getProductById);
+productRouter.get("/", getAllProducts);
+
+productRouter.get("/:productId", getProductById);
 
 productRouter.patch(
   "/update/:productId",
