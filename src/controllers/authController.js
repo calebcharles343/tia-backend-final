@@ -55,6 +55,9 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 
 // Reset password
 const resetPassword = catchAsync(async (req, res, next) => {
+  if (password !== confirm_password) {
+    return next(new AppError("Passwords do not match", 400));
+  }
   const user = await findUserByResetTokenService(req.params.token);
   await updateUserPasswordService(user, req.body.password);
   createSendToken(user, 200, res);
