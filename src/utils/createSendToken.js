@@ -2,7 +2,7 @@
 const signToken = require("../utils/signToken");
 const handleResponse = require("./handleResponse");
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user.id);
 
   res.cookie("jwt", token, {

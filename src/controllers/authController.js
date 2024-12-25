@@ -25,7 +25,7 @@ const signup = catchAsync(async (req, res, next) => {
   // create a new user
   const newUser = await signupService(name, email, hashedPassword, role);
   // generate token and send response
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, req, res);
 });
 
 // login user
@@ -35,7 +35,7 @@ const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password!", 400));
   }
   const user = await loginService(email, password, next);
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // Logout user
@@ -62,7 +62,7 @@ const resetPassword = catchAsync(async (req, res, next) => {
   }
   const user = await findUserByResetTokenService(req.params.token);
   await updateUserPasswordService(user, password);
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // Update password
@@ -82,7 +82,7 @@ const updatePassword = catchAsync(async (req, res, next) => {
   if (!currentUser) return handleResponse(res, 404, "User not found");
   await comparePasswords(passwordCurrent, currentUser.password);
   await updateUserPasswordService(currentUser, password);
-  createSendToken(currentUser, 200, res);
+  createSendToken(currentUser, 200, req, res);
 });
 
 module.exports = {
