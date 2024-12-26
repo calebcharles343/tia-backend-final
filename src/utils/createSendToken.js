@@ -1,12 +1,8 @@
-"use strict";
-
-const handleResponse = require("./handleResponse");
-const signToken = require("../utils/signToken");
-
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user.id);
 
-  const secure = req.secure || req.headers["x-forwarded-proto"] === "https";
+  const secure =
+    req.secure || req.headers["x-forwarded-proto"] === "https" || false;
 
   const cookieOptions = {
     expires: new Date(
@@ -25,5 +21,3 @@ const createSendToken = (user, statusCode, req, res) => {
     user,
   });
 };
-
-module.exports = createSendToken;

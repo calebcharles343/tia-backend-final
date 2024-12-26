@@ -39,6 +39,8 @@ app.use(
   })
 );
 
+app.set("trust proxy", true);
+
 app.use(express.json({ limit: "10kb" }));
 
 // Security Headers
