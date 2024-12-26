@@ -15,6 +15,7 @@ const reviewRouter = require("./routes/reviewRoutes.js");
 const a3BucketRouter = require("./routes/a3BucketRoutes.js");
 const multer = require("multer");
 const { memoryStorage } = multer;
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -29,17 +30,20 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.error(`CORS error: Origin ${origin} not allowed`);
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Enable cookies
+    credentials: true, // Allow cookies and authentication headers
   })
 );
 
 app.set("trust proxy", true);
+
+app.use(cookieParser());
 
 app.use(express.json({ limit: "10kb" }));
 
