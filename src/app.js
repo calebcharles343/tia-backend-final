@@ -20,9 +20,21 @@ dotenv.config();
 
 const app = express();
 
+// Allow multiple origins
+const allowedOrigins = [
+  "http://localhost:5176",
+  "https://tia-backend-final.onrender.com",
+];
+
 app.use(
   cors({
-    origin: "https://tia-backend-final.onrender.com/api/v1/e-commerce", // Allow your client's domain
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true, // Enable cookies
   })
 );
