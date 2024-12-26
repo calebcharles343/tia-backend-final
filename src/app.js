@@ -22,7 +22,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://your-client-domain", // Allow your client's domain
+    origin: "https://tia-backend-final.onrender.com/api/v1/e-commerce", // Allow your client's domain
     credentials: true, // Enable cookies
   })
 );
