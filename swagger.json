@@ -436,7 +436,7 @@
         }
       }
     },
-    "/orders/admin": {
+    "/orders/administrator": {
       "get": {
         "tags": ["Order"],
         "description": "Retrieve entire customer orders restricted to Admin. Login is required.",
