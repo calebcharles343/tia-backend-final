@@ -4,12 +4,13 @@ const catchAsync = require("../middleware/catchAsync.js");
 const userByToken = require("../utils/userByToken.js");
 
 const {
-  createOrderService,
+  createOrderAndPaymentSession,
   getUserOrdersSevice,
   getOrderByIdSevice,
   updateOrderStatusSevice,
   deleteOrderSevice,
   getAllAdminOrdersService,
+  getUserOrderByIdSevice,
 } = require("../services/orderService.js");
 
 const handleResponse = require("../utils/handleResponse.js");
@@ -27,9 +28,11 @@ const createOrder = catchAsync(async (req, res, next) => {
     return handleResponse(res, 400, "No items provided for the order");
   }
 
-  const order = await createOrderService(userId, items);
+  const order = await createOrderAndPaymentSession(userId, items);
 
-  handleResponse(res, 201, "Order created successfully", order);
+  res.redirect(order.session.url);
+
+  // handleResponse(res, 201, "Order created successfully", order);
 });
 
 // Get all orders for Admin =
@@ -51,8 +54,17 @@ const getUserOrders = catchAsync(async (req, res, next) => {
 
   handleResponse(res, 200, "orders fetched successfully", orders);
 });
+const getUserOrderById = catchAsync(async (req, res, next) => {
+  const currentUser = await userByToken(req, res);
+  if (!currentUser) return handleResponse(res, 404, "User not found");
+  const userId = currentUser.id;
+  const orderId = req.params.id;
 
-// Update order status (e.g., admin functionality)
+  const orders = await getUserOrderByIdSevice(userId, orderId);
+
+  handleResponse(res, 200, "orders fetched successfully", orders);
+});
+
 const updateOrderStatus = catchAsync(async (req, res, next) => {
   const { status } = req.body;
   const order = await getOrderByIdSevice(req.params.orderId);
@@ -78,6 +90,7 @@ module.exports = {
   createOrder,
   getAllAdminOrders,
   getUserOrders,
+  getUserOrderById,
   updateOrderStatus,
   deleteOrder,
 };
