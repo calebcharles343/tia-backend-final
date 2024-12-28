@@ -30,9 +30,9 @@ const createOrder = catchAsync(async (req, res, next) => {
 
   const order = await createOrderAndPaymentSession(userId, items);
 
-  res.redirect(order.session.url);
+  // res.redirect(order.session.url);
 
-  // handleResponse(res, 201, "Order created successfully", order);
+  handleResponse(res, 201, "Order created successfully", order);
 });
 
 // Get all orders for Admin =
