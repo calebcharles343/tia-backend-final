@@ -1,9 +1,27 @@
-"use strict";
+const AppError = require("../utils/appError");
+const { User, Order, OrderItem, Product } = require("../models/index");
+const { createCheckoutSession } = require("../services/paymentService");
 
-const AppError = require("../utils/appError.js");
-const { User, Order, OrderItem, Product } = require("../models/index.js");
+const getUserOrderByIdSevice = async (userId, id) => {
+  const order = await Order.findAll({
+    where: { id: id, userId: userId },
+    include: [
+      {
+        model: OrderItem,
+        as: "Items", // Match alias defined in model
+        include: [
+          {
+            model: Product,
+            as: "Product", // Match alias defined in model
+          },
+        ],
+      },
+    ],
+  });
+  return order;
+};
 
-const createOrderService = async (userId, items) => {
+const createOrderAndPaymentSession = async (userId, items) => {
   // Fetch product details from the database
   const productIds = items.map((item) => item.productId);
   const products = await Product.findAll({
@@ -24,7 +42,7 @@ const createOrderService = async (userId, items) => {
       throw new AppError(`Product with ID ${item.productId} not found`);
     }
 
-    const pricePerItem = product.price; // Get price from the database
+    const pricePerItem = parseFloat(product.price); // Get price from the database
     const itemTotal = item.quantity * pricePerItem;
     totalPrice += itemTotal;
 
@@ -52,7 +70,30 @@ const createOrderService = async (userId, items) => {
     });
   }
 
-  return order;
+  // Fetch the detailed order to get nested structure
+  const detailedOrder = await getUserOrderByIdSevice(userId, order.id);
+
+  // Prepare checkout items for Stripe
+  const checkoutItems = detailedOrder[0].Items.map((orderItem) => {
+    const product = orderItem.Product;
+    return {
+      name: product.name,
+      description: product.description,
+      price: Math.round(orderItem.pricePerItem * 100), // Convert to cents and round
+      quantity: orderItem.quantity,
+    };
+  });
+
+  // Create a Stripe checkout session
+  const session = await createCheckoutSession(
+    checkoutItems,
+    totalPrice, // Pass the total price separately
+    `${process.env.BASE_URL}/orders`,
+    `${process.env.BASE_URL}/cartPage`
+  );
+
+  // Return the order and session details
+  return { order, session };
 };
 
 const getAllAdminOrdersService = async () => {
@@ -119,7 +160,8 @@ const deleteOrderSevice = async (id) => {
 
 module.exports = {
   getAllAdminOrdersService,
-  createOrderService,
+  getUserOrderByIdSevice,
+  createOrderAndPaymentSession,
   getUserOrdersSevice,
   getOrderByIdSevice,
   updateOrderStatusSevice,
