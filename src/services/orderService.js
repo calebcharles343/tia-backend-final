@@ -87,11 +87,12 @@ const createOrderAndPaymentSession = async (userId, items) => {
   // Create a Stripe checkout session
   const session = await createCheckoutSession(
     checkoutItems,
-    totalPrice, // Pass the total price separately
+    order.id,
     `${process.env.BASE_URL}/orders`,
     `${process.env.BASE_URL}/cartPage`
   );
 
+  console.log(order, session);
   // Return the order and session details
   return { order, session };
 };

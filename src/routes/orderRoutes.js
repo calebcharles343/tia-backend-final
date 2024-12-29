@@ -21,7 +21,12 @@ orderRouter.post("/create", protect, createOrder);
 orderRouter.get("/", protect, getUserOrders);
 orderRouter.get("/:id", protect, getUserOrderById);
 
-orderRouter.get("/admin", protect, restrictTo("Admin"), getAllAdminOrders);
+orderRouter.get(
+  "/administrator",
+  protect,
+  restrictTo("Admin"),
+  getAllAdminOrders
+);
 
 orderRouter.patch(
   "/update/:orderId",
