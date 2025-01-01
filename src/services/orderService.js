@@ -46,6 +46,12 @@ const createOrderAndPaymentSession = async (userId, items) => {
     const itemTotal = item.quantity * pricePerItem;
     totalPrice += itemTotal;
 
+    // Deduct quantity from product stock
+    product.stock -= item.quantity;
+
+    // Save the updated product stock
+    product.save();
+
     return {
       productId: item.productId,
       quantity: item.quantity,
