@@ -96,7 +96,6 @@ const createOrderAndPaymentSession = async (userId, items) => {
   // Create a Stripe checkout session
   const session = await createCheckoutSession(
     checkoutItems,
-    totalPrice, // Pass the total price separately
     `${process.env.BASE_URL}/orders`,
     `${process.env.BASE_URL}/cartPage`
   );
