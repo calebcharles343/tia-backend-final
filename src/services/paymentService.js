@@ -12,6 +12,7 @@ const createCheckoutSession = async (items, successUrl, cancelUrl) => {
           product_data: {
             name: item.name,
             description: item.description,
+            quantity: item.quantity,
           },
           unit_amount: Math.round(item.price), // Convert to cents and round
         },
