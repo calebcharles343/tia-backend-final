@@ -35,29 +35,32 @@ const createOrderAndPaymentSession = async (userId, items) => {
 
   // Calculate total price and create order items
   let totalPrice = 0;
-  const orderItems = items.map((item) => {
+  const orderItems = [];
+
+  for (const item of items) {
     const product = products.find((p) => p.id === item.productId);
 
     if (!product) {
       throw new AppError(`Product with ID ${item.productId} not found`);
     }
 
+    if (product.stock < item.quantity) {
+      throw new AppError(`Insufficient stock for product ID ${item.productId}`);
+    }
+
     const pricePerItem = parseFloat(product.price); // Get price from the database
     const itemTotal = item.quantity * pricePerItem;
     totalPrice += itemTotal;
 
-    // Deduct quantity from product stock
-    product.stock -= item.quantity;
+    // Deduct quantity from product stock using decrement
+    await product.decrement("stock", { by: item.quantity });
 
-    // Save the updated product stock
-    product.save();
-
-    return {
+    orderItems.push({
       productId: item.productId,
       quantity: item.quantity,
       pricePerItem, // Include price fetched from the database
-    };
-  });
+    });
+  }
 
   // Create the order
   const order = await Order.create({
@@ -156,11 +159,49 @@ const updateOrderStatusSevice = async (order, status) => {
 };
 
 const deleteOrderSevice = async (id) => {
-  const order = await Order.findOne({ where: { id } });
+  const order = await Order.findOne({
+    where: { id },
+    include: [
+      {
+        model: OrderItem,
+        as: "Items",
+        include: [
+          {
+            model: Product,
+            as: "Product",
+          },
+        ],
+      },
+    ],
+  });
+
   if (!order) {
     throw new AppError(`Order with ID ${id} not found`);
   }
+
+  if (order.status === "pending") {
+    throw new AppError(
+      `Order still pending! Please cancel order before deletion`
+    );
+  }
+
+  // Increment product stock for each order item if the order is cancelled
+  if (order.status === "cancelled") {
+    for (const item of order.Items) {
+      const product = item.Product;
+
+      if (!product) {
+        throw new AppError(`Product with ID ${item.productId} not found`);
+      }
+
+      await product.increment("stock", { by: item.quantity });
+    }
+  }
+
+  // Delete the order and associated items
+  await OrderItem.destroy({ where: { orderId: id } });
   await Order.destroy({ where: { id } });
+
   return order;
 };
 
