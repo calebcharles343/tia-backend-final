@@ -2,12 +2,7 @@
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const createCheckoutSession = async (
-  items,
-  totalPrice,
-  successUrl,
-  cancelUrl
-) => {
+const createCheckoutSession = async (items, successUrl, cancelUrl) => {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
