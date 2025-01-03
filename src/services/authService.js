@@ -66,6 +66,10 @@ const loginService = async (email, password, next) => {
     },
   });
 
+  if (user.active === false) {
+    return next(new AppError("This account is no longer active", 401));
+  }
+
   if (!user || !(await comparePasswords(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
