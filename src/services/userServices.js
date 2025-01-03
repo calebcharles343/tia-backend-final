@@ -50,9 +50,7 @@ const getUserByIdService = async (id) => {
 
 // Fetch all active users
 const getAllUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: true },
-  });
+  const users = await User.findAll();
 
   const userPromises = users.map(async (user) => {
     const updateduser = await getUserByIdService(user.id);
@@ -65,22 +63,22 @@ const getAllUsersService = async () => {
   return updatedUsers;
 };
 
-// Fetch all inactive users
-const getAllInactiveUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: false },
-  });
+// // Fetch all inactive users
+// const getAllInactiveUsersService = async () => {
+//   const users = await User.findAll({
+//     where: { active: false },
+//   });
 
-  const userPromises = users.map(async (user) => {
-    const updateduser = await getUserByIdService(user.id);
-    return updateduser;
-  });
+//   const userPromises = users.map(async (user) => {
+//     const updateduser = await getUserByIdService(user.id);
+//     return updateduser;
+//   });
 
-  // Wait for all users to be processed
-  const updatedUsers = await Promise.all(userPromises);
+//   // Wait for all users to be processed
+//   const updatedUsers = await Promise.all(userPromises);
 
-  return updatedUsers;
-};
+//   return updatedUsers;
+// };
 
 // Update an existing user
 const updateUserService = async (id, newUserData) => {
@@ -105,7 +103,7 @@ const deleteUserService = async (id) => {
 
 module.exports = {
   getAllUsersService,
-  getAllInactiveUsersService,
+  // getAllInactiveUsersService,
   getUserByIdService,
   updateUserService,
   deleteUserService,

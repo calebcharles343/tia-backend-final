@@ -43,12 +43,12 @@ userRouter.get(
   restrictTo("Admin"),
   getAllUsers
 );
-userRouter.get(
-  "/closedAccounts",
-  protect,
-  restrictTo("Admin"),
-  getAllInactiveUsers
-);
+// userRouter.get(
+//   "/closedAccounts",
+//   protect,
+//   restrictTo("Admin"),
+//   getAllInactiveUsers
+// );
 userRouter.route("/user").get(protect, getUserById);
 userRouter.patch("/user/updateMe", protect, updateMe);
 userRouter.delete("/user/deleteMe", protect, deleteUser);

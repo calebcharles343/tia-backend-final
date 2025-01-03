@@ -198,19 +198,6 @@
         }
       }
     },
-    "/users/closedAccounts": {
-      "get": {
-        "tags": ["User Management"],
-        "description": "Retrieve a list of all deleted users. This operation is restricted to admin users.",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "responses": {
-          "200": { "description": "Deleted Users retrieved successfully." },
-          "401": { "description": "Unauthorized access." },
-          "500": { "description": "Internal server error." }
-        }
-      }
-    },
     "/users/user": {
       "get": {
         "tags": ["User Management"],
