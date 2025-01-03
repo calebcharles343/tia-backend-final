@@ -21,6 +21,7 @@ const {
 const protect = require("../middleware/protect.js");
 const changedPasswordAfterToken = require("../middleware/changedPasswordAfterToken.js");
 const restrictTo = require("../middleware/restrictTo.js");
+const userStatus = require("../middleware/userStatus.js");
 
 const userRouter = express.Router();
 
