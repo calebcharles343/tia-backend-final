@@ -64,7 +64,9 @@ const getAllUsersService = async () => {
 };
 
 const updateUserRoleSevice = async (userId, role) => {
-  const user = getUserByIdService(userId);
+  const user = await User.findOne({
+    where: { id: userId },
+  });
 
   if (!user) {
     throw new Error(`User with ID ${userId} not found`);
@@ -72,16 +74,16 @@ const updateUserRoleSevice = async (userId, role) => {
 
   user.role = role;
   await user.save();
+
   return user;
 };
 
-// Update an existing user
 const updateUserService = async (id, newUserData) => {
   const [rowsUpdated, [updatedUser]] = await User.update(newUserData, {
     where: { id },
-    returning: true, // Return the updated rows
+    returning: true,
   });
-  return updatedUser; // Return the first updated user
+  return updatedUser;
 };
 
 // Soft delete a user (mark as inactive)

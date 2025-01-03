@@ -49,6 +49,7 @@ userRouter.patch(
   "/updateUserRole/:userId",
   protect,
   restrictTo("Admin"),
+  userStatus("Admin", "User"),
   updateUserRole
 );
 userRouter.route("/user").get(protect, getUserById);
