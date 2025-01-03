@@ -1,8 +1,8 @@
 const AppError = require("../utils/appError");
 
-const userStatus = (...status) => {
+const userStatus = (...roles) => {
   return (req, res, next) => {
-    if (!status.includes(req.body.role)) {
+    if (!roles.includes(req.body.role)) {
       return next(
         new AppError("User role options are only Admin or User", 403)
       );
