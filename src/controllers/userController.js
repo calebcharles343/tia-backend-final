@@ -4,7 +4,6 @@ const catchAsync = require("../middleware/catchAsync.js");
 const userByToken = require("../utils/userByToken.js");
 const {
   deleteUserService,
-  getAllInactiveUsersService,
   getAllUsersService,
   updateUserService,
 } = require("../services/userServices.js");
@@ -83,7 +82,6 @@ const deleteUser = catchAsync(async (req, res, next) => {
 
 module.exports = {
   getAllUsers,
-  getAllInactiveUsers,
   getUserById,
   updateMe,
   deleteUser,
