@@ -63,22 +63,17 @@ const getAllUsersService = async () => {
   return updatedUsers;
 };
 
-// // Fetch all inactive users
-// const getAllInactiveUsersService = async () => {
-//   const users = await User.findAll({
-//     where: { active: false },
-//   });
+const updateUserRoleSevice = async (userId, role) => {
+  const user = getUserByIdService(userId);
 
-//   const userPromises = users.map(async (user) => {
-//     const updateduser = await getUserByIdService(user.id);
-//     return updateduser;
-//   });
+  if (!user) {
+    throw new Error(`User with ID ${userId} not found`);
+  }
 
-//   // Wait for all users to be processed
-//   const updatedUsers = await Promise.all(userPromises);
-
-//   return updatedUsers;
-// };
+  user.role = role;
+  await user.save();
+  return user;
+};
 
 // Update an existing user
 const updateUserService = async (id, newUserData) => {
@@ -103,8 +98,8 @@ const deleteUserService = async (id) => {
 
 module.exports = {
   getAllUsersService,
-  // getAllInactiveUsersService,
   getUserByIdService,
   updateUserService,
   deleteUserService,
+  updateUserRoleSevice,
 };

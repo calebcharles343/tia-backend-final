@@ -7,6 +7,7 @@ const {
   getAllUsers,
   getUserById,
   updateMe,
+  updateUserRole,
 } = require("../controllers/userController.js");
 const singupValidator = require("../middleware/singupValidator.js");
 const {
@@ -43,12 +44,13 @@ userRouter.get(
   restrictTo("Admin"),
   getAllUsers
 );
-// userRouter.get(
-//   "/closedAccounts",
-//   protect,
-//   restrictTo("Admin"),
-//   getAllInactiveUsers
-// );
+userRouter.post(
+  "/updateUserRole/:userId",
+  protect,
+  restrictTo("Admin"),
+  userStatus("Admin", "User"),
+  updateUserRole
+);
 userRouter.route("/user").get(protect, getUserById);
 userRouter.patch("/user/updateMe", protect, updateMe);
 userRouter.delete("/user/deleteMe", protect, deleteUser);

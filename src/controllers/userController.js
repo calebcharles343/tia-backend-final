@@ -6,6 +6,7 @@ const {
   deleteUserService,
   getAllUsersService,
   updateUserService,
+  updateUserRoleSevice,
 } = require("../services/userServices.js");
 const filterObj = require("../utils/filterObj.js");
 
@@ -70,6 +71,13 @@ const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+const updateUserRole = catchAsync(async (req, res, next) => {
+  const { role } = req.body;
+  const userId = req.params.userId;
+  const UpdatedUserRole = await updateUserRoleSevice(userId, role);
+  handleResponse(res, 200, `User role updated successfully`, UpdatedUserRole);
+});
+
 const deleteUser = catchAsync(async (req, res, next) => {
   const currentUser = await userByToken(req, res);
   if (!currentUser) return handleResponse(res, 404, "User not found");
@@ -84,5 +92,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   updateMe,
+  updateUserRole,
   deleteUser,
 };

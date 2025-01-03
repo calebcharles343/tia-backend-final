@@ -212,6 +212,45 @@
       }
     },
 
+    "/users/updateUserRole/{userId}": {
+      "patch": {
+        "tags": ["User Management"],
+        "description": "Update the role of a user by ID restricted to Admin. Login is required.",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the order to update."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Role update for the user.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["Admin", "User"]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order status updated successfully." },
+          "401": { "description": "Unauthorized access." },
+          "404": { "description": "Order not found." },
+          "500": { "description": "Internal server error." }
+        }
+      }
+    },
+
     "/users/user/updateMe": {
       "patch": {
         "tags": ["User Management"],
@@ -447,7 +486,7 @@
         }
       }
     },
-    "/orders/update/{orderId}": {
+    "/orders/updateOrderStatus/{orderId}": {
       "patch": {
         "tags": ["Order"],
         "description": "Update the status of an order by ID restricted to Admin. Login is required.",

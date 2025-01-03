@@ -30,7 +30,7 @@ orderRouter.get("/:id", protect, getUserOrderById);
 // orderRouter.get("/admin", protect, restrictTo("Admin"), getAllAdminOrders);
 
 orderRouter.patch(
-  "/update/:orderId",
+  "/updateOrderStatus/:orderId",
   protect,
   restrictTo("Admin"),
   orderStatus("pending", "completed", "cancelled"),
