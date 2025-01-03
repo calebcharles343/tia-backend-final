@@ -45,7 +45,7 @@ userRouter.get(
   restrictTo("Admin"),
   getAllUsers
 );
-userRouter.post(
+userRouter.patch(
   "/updateUserRole/:userId",
   protect,
   restrictTo("Admin"),
