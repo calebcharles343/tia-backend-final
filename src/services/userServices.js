@@ -70,7 +70,16 @@ const getAllInactiveUsersService = async () => {
   const users = await User.findAll({
     where: { active: false },
   });
-  return users;
+
+  const userPromises = users.map(async (user) => {
+    const updateduser = await getUserByIdService(user.id);
+    return updateduser;
+  });
+
+  // Wait for all users to be processed
+  const updatedUsers = await Promise.all(userPromises);
+
+  return updatedUsers;
 };
 
 // Update an existing user
