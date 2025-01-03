@@ -4,22 +4,6 @@ const { getUserPresignedUrls } = require("../models/A3Bucket.js");
 
 const { User, Order, OrderItem, Product } = require("../models/index.js");
 
-// Fetch all active users
-const getAllUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: true },
-  });
-  return users;
-};
-
-// Fetch all inactive users
-const getAllInactiveUsersService = async () => {
-  const users = await User.findAll({
-    where: { active: false },
-  });
-  return users;
-};
-
 const getUserByIdService = async (id) => {
   try {
     const user = await User.findOne({
@@ -62,6 +46,31 @@ const getUserByIdService = async (id) => {
     console.error(`Error fetching user by ID ${id}:`, error);
     throw error;
   }
+};
+
+// Fetch all active users
+const getAllUsersService = async () => {
+  const users = await User.findAll({
+    where: { active: true },
+  });
+
+  const userPromises = users.map(async (user) => {
+    const updateduser = await getUserByIdService(user.id);
+    return updateduser;
+  });
+
+  // Wait for all users to be processed
+  const updatedUsers = await Promise.all(userPromises);
+
+  return updatedUsers;
+};
+
+// Fetch all inactive users
+const getAllInactiveUsersService = async () => {
+  const users = await User.findAll({
+    where: { active: false },
+  });
+  return users;
 };
 
 // Update an existing user
