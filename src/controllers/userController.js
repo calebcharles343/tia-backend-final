@@ -51,12 +51,11 @@ const updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, "name", "email");
+  const filteredBody = filterObj(req.body, "name");
 
   // 3) Update user record
   const updatedUser = await updateUserService(currentUser.id, {
     name: filteredBody.name,
-    email: filteredBody.email,
   });
 
   if (!updatedUser) {
