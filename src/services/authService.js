@@ -42,6 +42,8 @@ const signupService = async (name, email, hashedPassword, role = "User") => {
     },
   });
 
+  userWithAssociations.password = undefined;
+
   return userWithAssociations;
 };
 
@@ -50,15 +52,15 @@ const loginService = async (email, password, next) => {
     where: { email },
     include: {
       model: Order,
-      as: "Orders", // Include associated orders
+      as: "Orders",
       include: [
         {
           model: OrderItem,
-          as: "Items", // Match alias defined in model
+          as: "Items",
           include: [
             {
               model: Product,
-              as: "Product", // Match alias defined in model
+              as: "Product",
             },
           ],
         },
@@ -66,12 +68,12 @@ const loginService = async (email, password, next) => {
     },
   });
 
-  if (user.active === false) {
-    return next(new AppError("This account is no longer active", 401));
-  }
-
   if (!user || !(await comparePasswords(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
+  }
+
+  if (user.active === false) {
+    return next(new AppError("This account is no longer active", 401));
   }
 
   const avatarId = `userAvatar-${user.id}`;
@@ -82,20 +84,18 @@ const loginService = async (email, password, next) => {
   } else {
     user.avatar = presignedUrls[0]?.url || undefined;
   }
+  user.password = undefined;
+  user.passwordResetToken = undefined;
+
   return user;
 };
 
 const sendResetEmail = async (user, resetToken, req) => {
-  // const resetURL = `${req.protocol}://${req.get(
-  //   "host"
-  // )}/api/v1/users/resetPassword/${resetToken}`;
-  const resetURL = `https://tia-finalp.netlify.app/auth/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+  const resetURL = `${process.env.BASE_URL}/auth/reset-password/${resetToken}`;
 
   await sendMail({
     userMail: user.email,
-    message,
+    resetURL,
   });
 };
 

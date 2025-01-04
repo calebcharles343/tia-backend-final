@@ -18,16 +18,6 @@ const getAllUsers = catchAsync(async (req, res, next) => {
   handleResponse(res, 200, "Users fetched successfully", users);
 });
 
-// const getAllInactiveUsers = catchAsync(async (req, res, next) => {
-//   const inactiveUsers = await getAllInactiveUsersService();
-//   handleResponse(
-//     res,
-//     200,
-//     "Closed accounts fetched successfully",
-//     inactiveUsers
-//   );
-// });
-
 const getUserById = catchAsync(async (req, res, next) => {
   const currentUser = await userByToken(req, res);
 
