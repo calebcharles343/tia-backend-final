@@ -62,12 +62,7 @@ const updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError("No user found with that ID", 404));
   }
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user: updatedUser,
-    },
-  });
+  handleResponse(res, 200, "User name updated successfully", updatedUser);
 });
 
 const updateUserRole = catchAsync(async (req, res, next) => {
