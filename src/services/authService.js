@@ -145,6 +145,7 @@ const updateUserPasswordService = async (user, newPassword) => {
     passwordResetToken: null,
     passwordResetExpires: null,
     passwordChangedAt: new Date(),
+    active: true,
   });
 };
 
