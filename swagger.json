@@ -280,7 +280,7 @@
         }
       }
     },
-    "/users//user/deleteMe": {
+    "/users/user/deleteMe": {
       "delete": {
         "tags": ["User Management"],
         "description": "Delete a user account.",
