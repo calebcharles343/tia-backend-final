@@ -251,7 +251,7 @@
       }
     },
 
-    "/users/user/updateMe": {
+    "/users/updateMe": {
       "patch": {
         "tags": ["User Management"],
         "description": "Update a user account",
@@ -280,7 +280,7 @@
         }
       }
     },
-    "/users/user/deleteMe": {
+    "/users/deleteMe": {
       "delete": {
         "tags": ["User Management"],
         "description": "Delete a user account.",

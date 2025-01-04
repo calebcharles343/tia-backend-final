@@ -53,7 +53,7 @@ userRouter.patch(
   updateUserRole
 );
 userRouter.route("/user").get(protect, getUserById);
-userRouter.patch("/user/updateMe", protect, updateMe);
-userRouter.delete("/user/deleteMe", protect, deleteUser);
+userRouter.patch("/uupdateMe", protect, updateMe);
+userRouter.delete("/deleteMe", protect, deleteUser);
 
 module.exports = userRouter;
