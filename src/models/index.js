@@ -9,7 +9,7 @@ const Product = require("./Product");
 // User -> Order: One-to-Many
 User.hasMany(Order, {
   foreignKey: "userId",
-  as: "Orders", // Changed to match the query
+  as: "Orders",
   onDelete: "CASCADE",
 });
 
