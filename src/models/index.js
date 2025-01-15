@@ -15,14 +15,14 @@ User.hasMany(Order, {
 
 Order.belongsTo(User, {
   foreignKey: "userId",
-  as: "User", // Capitalized for consistency
+  as: "User",
 });
 
 // User -> Review: One-to-Many
 User.hasMany(Review, {
   foreignKey: "userId",
   onDelete: "CASCADE",
-  as: "Reviews", // Capitalized for consistency
+  as: "Reviews",
 });
 
 Review.belongsTo(User, {
@@ -34,7 +34,7 @@ Review.belongsTo(User, {
 Order.hasMany(OrderItem, {
   foreignKey: "orderId",
   onDelete: "CASCADE",
-  as: "Items", // Capitalized for consistency
+  as: "Items",
 });
 
 OrderItem.belongsTo(Order, {
@@ -45,7 +45,7 @@ OrderItem.belongsTo(Order, {
 // Product -> OrderItem: One-to-Many
 Product.hasMany(OrderItem, {
   foreignKey: "productId",
-  as: "OrderItems", // Capitalized for consistency
+  as: "OrderItems",
 });
 
 OrderItem.belongsTo(Product, {
